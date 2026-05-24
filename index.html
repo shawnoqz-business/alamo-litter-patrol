@@ -3,59 +3,65 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alamo Litter Patrol — San Antonio's Cat Litter Box Swap Service</title>
-  <meta name="description" content="Weekly cat litter box swap service in San Antonio, TX. We drop clean, take dirty, you never touch litter again. Starting at $40/week. Litter included." />
+  <title>Alamo Litter Patrol — San Antonio's Cat Litter Box Service</title>
+  <meta name="description" content="Weekly cat litter box swap service in San Antonio. We drop clean, take dirty, you never touch litter again. Box swap, Litter-Robot cleaning, and scooping available. Veteran-owned." />
+  <link rel="canonical" href="https://alamolitterpatrol.com/" />
+  <meta property="og:title" content="Alamo Litter Patrol — San Antonio Cat Litter Service" />
+  <meta property="og:description" content="We swap your cat's litter box every week. You never touch litter again." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://alamolitterpatrol.com/" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <script async src="https://tally.so/widgets/embed.js"></script>
 </head>
 <body>
 
+  <a class="skip-link" href="#main">Skip to content</a>
+
   <!-- ══ NAVIGATION ══ -->
   <header id="site-nav" role="banner">
     <nav aria-label="Main navigation">
-      <a href="#" class="nav-logo">ALAMO LITTER PATROL</a>
+      <a href="/" class="nav-logo">ALAMO LITTER PATROL</a>
       <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-links" id="nav-links">
-        <li><a href="#services">Services</a></li>
-        <li><a href="#how-it-works">How It Works</a></li>
-        <li><a href="#faq">FAQ</a></li>
-        <li><a href="#book" class="nav-cta" data-tally-open="eq0L8O">Book Now</a></li>
+        <li><a href="/how-it-works.html">How It Works</a></li>
+        <li><a href="/pricing.html">Pricing</a></li>
+        <li><a href="/service-area.html">Service Area</a></li>
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/faq.html">FAQ</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/book.html" class="nav-cta">Book Now</a></li>
       </ul>
     </nav>
   </header>
 
-  <main>
+  <main id="main">
 
-    <!-- ══ SECTION 1 — HERO ══ -->
+    <!-- ══ HERO ══ -->
     <section id="hero" aria-label="Hero">
       <div class="hero-photo">
-        <img
-          src="images/bug-hero.jpg"
-          alt="Bug, a tuxedo cat walking straight at the camera, green eyes, white paws"
-          fetchpriority="high"
-        />
+        <img src="assets/bug-hero.jpg" alt="Bug, a tuxedo cat walking toward the camera with bright green eyes" fetchpriority="high" />
       </div>
       <div class="hero-content">
-        <p class="eyebrow">San Antonio's Only Litter Swap Service</p>
+        <p class="eyebrow">San Antonio's Cat Litter Service</p>
         <h1>YOUR CAT DESERVES A CLEAN BOX.<br>YOU DESERVE A BREAK.</h1>
-        <p class="hero-subhead">Weekly litter box swap — we drop clean, we take dirty, you never touch litter again. Starting at $40/week. Litter included.</p>
-        <button class="btn btn-orange" data-tally-open="eq0L8O">GET STARTED — $40/WK</button>
-        <a href="#how-it-works" class="hero-secondary">See how it works ↓</a>
+        <p class="hero-subhead">We swap your cat's litter box every week. Or clean your Litter-Robot. Or just scoop. Whatever you need — you never touch litter again.</p>
+        <a href="/book.html" class="btn btn-orange">GET STARTED</a>
+        <a href="/how-it-works.html" class="hero-secondary">See how it works →</a>
       </div>
     </section>
 
-    <!-- ══ SECTION 2 — PROBLEM & SOLUTION ══ -->
-    <section id="services" class="problem-solution" aria-label="The problem and our solution">
+    <!-- ══ PROBLEM / SOLUTION ══ -->
+    <section class="problem-solution" aria-label="The problem and our solution">
       <div class="ps-col">
         <h2>THE LITTER BOX PROBLEM</h2>
         <ul class="dash-list">
           <li>Scooping every day. Smelling it anyway.</li>
-          <li>Pregnant? You're not supposed to touch it at all.</li>
+          <li>Pregnant? Your doctor told you to stop touching it.</li>
+          <li>Getting older. Bending hurts. The box keeps filling.</li>
           <li>You love your cat. Not this part.</li>
         </ul>
       </div>
@@ -63,199 +69,121 @@
         <h2>THE ALAMO SOLUTION</h2>
         <ul class="check-list">
           <li>We swap the whole box. Fresh litter every week.</li>
-          <li>Porch pickup — we never enter your home.</li>
+          <li>Pick your service: box swap, Litter-Robot, or scoop.</li>
+          <li>Porch service available — save $15 per visit.</li>
           <li>Subscribe once. Never think about it again.</li>
         </ul>
       </div>
     </section>
 
-    <!-- ══ SECTION 3 — HOW IT WORKS ══ -->
-    <section id="how-it-works" class="how-it-works" aria-label="How it works">
+    <!-- ══ HOW IT WORKS (teaser) ══ -->
+    <section class="how-it-works">
       <h2 class="section-heading">THREE STEPS. ZERO SCOOPING.</h2>
+      <p class="section-subhead">Pick a plan. We come on your day. You enjoy your life.</p>
       <div class="steps-grid">
 
         <article class="step-card">
-          <div class="step-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="10" y="6" width="28" height="36" rx="3" stroke="#FF5F1F" stroke-width="2.5"/>
-              <path d="M18 4v4M30 4v4" stroke="#FF5F1F" stroke-width="2.5" stroke-linecap="round"/>
-              <rect x="10" y="6" width="28" height="8" rx="2" fill="#FF5F1F" fill-opacity="0.12"/>
-              <line x1="17" y1="22" x2="31" y2="22" stroke="#FF5F1F" stroke-width="2.5" stroke-linecap="round"/>
-              <line x1="17" y1="28" x2="31" y2="28" stroke="#FF5F1F" stroke-width="2.5" stroke-linecap="round"/>
-              <line x1="17" y1="34" x2="24" y2="34" stroke="#FF5F1F" stroke-width="2.5" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <h3>Pick Your Plan</h3>
-          <p>Choose 1, 2, or 3+ cats. We handle the rest.</p>
+          <p class="step-number">STEP 01</p>
+          <h3>Pick Your Service</h3>
+          <p>Box swap, Litter-Robot cleaning, or scooping. Choose home entry or porch service.</p>
         </article>
 
         <article class="step-card">
-          <div class="step-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 22C8 14.268 14.268 8 22 8" stroke="#FF5F1F" stroke-width="2.5" stroke-linecap="round"/>
-              <polyline points="18,4 22,8 18,12" stroke="#FF5F1F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M40 26C40 33.732 33.732 40 26 40" stroke="#FF5F1F" stroke-width="2.5" stroke-linecap="round"/>
-              <polyline points="30,44 26,40 30,36" stroke="#FF5F1F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <h3>We Swap on Your Day</h3>
-          <p>Leave the dirty box on your porch. We drop a clean pre-filled one. You get a photo confirmation.</p>
+          <p class="step-number">STEP 02</p>
+          <h3>We Come Weekly</h3>
+          <p>Same day, every week. Photo confirmation on every visit. Reply SKIP anytime to skip a week.</p>
         </article>
 
         <article class="step-card">
-          <div class="step-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="4" y="26" width="40" height="14" rx="3" stroke="#FF5F1F" stroke-width="2.5"/>
-              <rect x="10" y="20" width="28" height="10" rx="3" stroke="#FF5F1F" stroke-width="2.5"/>
-              <rect x="10" y="20" width="28" height="10" rx="3" fill="#FF5F1F" fill-opacity="0.1"/>
-              <path d="M10 40v4M38 40v4" stroke="#FF5F1F" stroke-width="2.5" stroke-linecap="round"/>
-              <circle cx="36" cy="15" r="5" stroke="#FF5F1F" stroke-width="2.5"/>
-              <path d="M33 15c1-2 3-2 3 0s2 2 3 0" stroke="#FF5F1F" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <h3>Enjoy Your Life</h3>
-          <p>Same day, every week. No scooping. No smell. No guilt.</p>
+          <p class="step-number">STEP 03</p>
+          <h3>Live Your Life</h3>
+          <p>No more scooping. No more smell. No more guilt.</p>
         </article>
 
       </div>
+      <div style="text-align:center;margin-top:3rem;">
+        <a href="/how-it-works.html" class="btn btn-ghost">SEE FULL DETAILS</a>
+      </div>
     </section>
 
-    <!-- ══ SECTION 4 — PRICING ══ -->
-    <section id="pricing" class="pricing" aria-label="Pricing">
+    <!-- ══ PRICING TEASER ══ -->
+    <section class="pricing">
       <h2 class="section-heading">SIMPLE, FLAT PRICING</h2>
-      <p class="section-subhead">Litter included. No hidden fees. Cancel anytime.</p>
+      <p class="section-subhead">Box swap starts at $55/wk · Litter-Robot at $70/visit · Scoop-only at $25/visit<br>
+        <span style="font-size:0.9rem;">Porch service knocks $15 off any swap. 10% senior discount (65+).</span>
+      </p>
       <div class="pricing-grid">
 
         <div class="price-card">
-          <h3>1 Cat</h3>
-          <div class="price">$40<span>/wk</span></div>
-          <p class="price-details">1 box swap · litter included</p>
+          <h3>1 Box</h3>
+          <div class="price">$55<span>/wk</span></div>
+          <p class="price-details">Weekly box swap · litter included</p>
+          <p class="porch-pill">🏠 Porch: <strong>$40/wk</strong></p>
           <p class="setup-fee">+ one-time $50 setup fee</p>
-          <button class="btn btn-orange" data-tally-open="eq0L8O">GET STARTED</button>
+          <a href="/book.html" class="btn btn-orange">GET STARTED</a>
         </div>
 
         <div class="price-card featured">
           <span class="popular-badge">MOST POPULAR</span>
-          <h3>2 Cats</h3>
-          <div class="price">$65<span>/wk</span></div>
-          <p class="price-details">2 box swaps · litter included</p>
+          <h3>2 Boxes</h3>
+          <div class="price">$80<span>/wk</span></div>
+          <p class="price-details">Weekly box swap · litter included</p>
+          <p class="porch-pill">🏠 Porch: <strong>$65/wk</strong></p>
           <p class="setup-fee">+ one-time $50 setup fee</p>
-          <button class="btn btn-outline" data-tally-open="eq0L8O">GET STARTED</button>
+          <a href="/book.html" class="btn btn-outline">GET STARTED</a>
         </div>
 
         <div class="price-card">
-          <h3>3+ Cats</h3>
-          <div class="price">$90<span>/wk</span></div>
-          <p class="price-details">3+ boxes · litter included</p>
+          <h3>3 Boxes</h3>
+          <div class="price">$105<span>/wk</span></div>
+          <p class="price-details">Weekly box swap · litter included</p>
+          <p class="porch-pill">🏠 Porch: <strong>$90/wk</strong></p>
           <p class="setup-fee">+ one-time $50 setup fee</p>
-          <button class="btn btn-orange" data-tally-open="eq0L8O">GET STARTED</button>
+          <a href="/book.html" class="btn btn-orange">GET STARTED</a>
         </div>
 
       </div>
-      <p class="addon-note">Need us to come inside? Home-entry add-on: +$15/visit</p>
+      <p class="addon-note" style="margin-top:2rem;">Want Litter-Robot cleaning or scoop-only? <a href="/pricing.html">See all pricing →</a></p>
     </section>
 
-    <!-- ══ SECTION 5 — TRUST MARQUEE ══ -->
+    <!-- ══ TRUST MARQUEE ══ -->
     <section class="trust-bar" aria-label="Why customers trust us">
       <div class="marquee-track">
         <div class="marquee-inner" aria-hidden="true">
-          <span>🐾 Serving Leon Valley, Helotes, NW San Antonio &amp; Medical Center area</span>
+          <span>🐾 Serving Leon Valley, Helotes, NW San Antonio &amp; Medical Center</span>
           <span class="paw-sep">🐾</span>
-          <span>📦 Clean box + fresh litter delivered to your porch</span>
-          <span class="paw-sep">🐾</span>
-          <span>🎖️ Service-Disabled Veteran-Owned Small Business</span>
-          <span class="paw-sep">🐾</span>
-          <span>✅ No home entry required — ever</span>
-          <span class="paw-sep">🐾</span>
-          <!-- duplicate for seamless loop -->
-          <span>🐾 Serving Leon Valley, Helotes, NW San Antonio &amp; Medical Center area</span>
-          <span class="paw-sep">🐾</span>
-          <span>📦 Clean box + fresh litter delivered to your porch</span>
+          <span>📦 Clean box + fresh litter, every week</span>
           <span class="paw-sep">🐾</span>
           <span>🎖️ Service-Disabled Veteran-Owned Small Business</span>
           <span class="paw-sep">🐾</span>
-          <span>✅ No home entry required — ever</span>
+          <span>✅ Porch service available — save $15/visit</span>
+          <span class="paw-sep">🐾</span>
+          <span>🐾 Serving Leon Valley, Helotes, NW San Antonio &amp; Medical Center</span>
+          <span class="paw-sep">🐾</span>
+          <span>📦 Clean box + fresh litter, every week</span>
+          <span class="paw-sep">🐾</span>
+          <span>🎖️ Service-Disabled Veteran-Owned Small Business</span>
+          <span class="paw-sep">🐾</span>
+          <span>✅ Porch service available — save $15/visit</span>
           <span class="paw-sep">🐾</span>
         </div>
       </div>
     </section>
 
-    <!-- ══ SECTION 6 — FAQ ══ -->
-    <section id="faq" class="faq" aria-label="Frequently asked questions">
-      <h2 class="section-heading">QUESTIONS?</h2>
-      <div class="faq-list">
-
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            What kind of litter do you use?
-            <span class="faq-icon" aria-hidden="true">+</span>
-          </button>
-          <div class="faq-answer" role="region">
-            <p>Premium clumping clay litter, unscented. If your cat has a preference, note it when you sign up.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            Do you enter my home?
-            <span class="faq-icon" aria-hidden="true">+</span>
-          </button>
-          <div class="faq-answer" role="region">
-            <p>Never, by default. We swap boxes on your porch. Home entry is available as a paid add-on (+$15) for cats that can't access a porch.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            What if I need to skip a week?
-            <span class="faq-icon" aria-hidden="true">+</span>
-          </button>
-          <div class="faq-answer" role="region">
-            <p>No problem. Text or email us 24 hours before your scheduled swap. No charge.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            What do you do with the dirty litter?
-            <span class="faq-icon" aria-hidden="true">+</span>
-          </button>
-          <div class="faq-answer" role="region">
-            <p>We bag and dispose of it properly. You don't touch it.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            How do I get started?
-            <span class="faq-icon" aria-hidden="true">+</span>
-          </button>
-          <div class="faq-answer" role="region">
-            <p>Fill out our short intake form (cat names, box count, address, gate code if needed). We'll confirm your first swap day within 24 hours.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">
-            Are you insured?
-            <span class="faq-icon" aria-hidden="true">+</span>
-          </button>
-          <div class="faq-answer" role="region">
-            <p>Yes. Fully insured, service-disabled veteran-owned small business.</p>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ══ SECTION 7 — CTA BAND ══ -->
-    <section id="book" class="cta-band" aria-label="Call to action">
+    <!-- ══ FINAL CTA ══ -->
+    <section class="cta-band">
       <h2>READY TO NEVER SCOOP AGAIN?</h2>
-      <p>San Antonio's only weekly litter box swap service. Starting at $40/week.</p>
-      <button class="btn btn-orange" data-tally-open="eq0L8O">BOOK YOUR FIRST SWAP</button>
+      <p>San Antonio's only weekly litter service. Starting at $40/week with porch service.</p>
+      <a href="/book.html" class="btn btn-orange">BOOK YOUR FIRST SWAP</a>
     </section>
 
   </main>
+
+  <!-- ══ MOBILE STICKY CTA ══ -->
+  <div class="mobile-cta-bar" aria-hidden="false">
+    <a href="/book.html" class="btn btn-orange">📦 BOOK NOW</a>
+    <a href="mailto:hello@alamolitterpatrol.com" class="btn btn-outline" style="border-color:var(--white);color:var(--white);">✉️ CONTACT</a>
+  </div>
 
   <!-- ══ FOOTER ══ -->
   <footer>
@@ -265,18 +193,18 @@
         <span class="footer-city">San Antonio, TX</span>
       </div>
       <nav class="footer-nav" aria-label="Footer navigation">
-        <a href="#services">Services</a>
-        <a href="#how-it-works">How It Works</a>
-        <a href="#faq">FAQ</a>
-        <a href="mailto:hello@alamolitterpatrol.com">Contact</a>
+        <a href="/how-it-works.html">How It Works</a>
+        <a href="/pricing.html">Pricing</a>
+        <a href="/service-area.html">Service Area</a>
+        <a href="/about.html">About</a>
+        <a href="/faq.html">FAQ</a>
+        <a href="/contact.html">Contact</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/terms.html">Terms</a>
       </nav>
-      <div class="footer-badge">
-        🎖️ Service-Disabled Veteran-Owned Small Business
-      </div>
+      <div class="footer-badge">🎖️ Service-Disabled Veteran-Owned Small Business</div>
     </div>
-    <div class="footer-bottom">
-      &copy; 2026 Alamo Litter Patrol &middot; alamolitterpatrol.com
-    </div>
+    <div class="footer-bottom">&copy; 2026 Alamo Litter Patrol &middot; San Antonio, TX</div>
   </footer>
 
   <script src="script.js"></script>
