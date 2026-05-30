@@ -66,7 +66,7 @@ Visit alamolitterpatrol.com and click through every nav link. Confirm:
 
 ## Critical Settings (Don't Change)
 
-- **Tally form ID:** `eq0L8O` — this is wired into 30+ buttons/links. Don't change unless replacing the form entirely.
+- **Tally form ID:** `LZ6aOJ` — this is wired into 30+ buttons/links. Don't change unless replacing the form entirely.
 - **Email:** `hello@alamolitterpatrol.com` — Namecheap forwards this to Shawn's Gmail.
 - **Color palette:** `#FFFFFF` (white) / `#111111` (black) / `#FF5F1F` (orange). 70/20/10 ratio.
 - **Fonts:** Bebas Neue (display) + DM Sans (body) — loaded from Google Fonts in `style.css`.
