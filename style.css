@@ -1,7 +1,7 @@
 /* ══════════════════════════════
    ALAMO LITTER PATROL — V2 SHARED STYLES
    Fonts: Bebas Neue (display) + DM Sans (body)
-   Palette: 70% white · 20% black · 10% orange (#FF5F1F)
+   Palette: ~70% white · 20% deep space blue (#023047) · 7% amber flame (#FFB703) · 3% blue green (#219EBC)
 ══════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
@@ -9,9 +9,11 @@
 :root {
   --white: #FFFFFF;
   --off-white: #F7F7F5;
-  --black: #111111;
-  --orange: #FF5F1F;
-  --orange-hover: #E04A0A;
+  --black: #023047;
+  --orange: #FFB703;
+  --orange-hover: #FFA000;
+  --blue-green: #219EBC;
+  --blue-green-hover: #1B8AA6;
   --gray-light: #E8E8E8;
   --gray-mid: #888888;
   --gray-dark: #555555;
@@ -140,12 +142,12 @@ ul { list-style: none; }
   position: absolute;
   bottom: 0; left: 0;
   width: 0; height: 2px;
-  background: var(--orange);
+  background: var(--blue-green);
   transition: width var(--t-med);
 }
 .nav-links a:not(.nav-cta):hover::after,
 .nav-links a:not(.nav-cta).active::after { width: 100%; }
-.nav-links a.active { color: var(--orange); font-weight: 600; }
+.nav-links a.active { color: var(--blue-green); font-weight: 600; }
 
 .nav-cta {
   background: var(--orange);
@@ -249,7 +251,7 @@ ul { list-style: none; }
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--orange);
+  color: var(--blue-green);
   margin-bottom: 1rem;
 }
 
@@ -376,7 +378,7 @@ ul { list-style: none; }
   font-family: var(--font-display);
   font-size: 0.9rem;
   letter-spacing: 0.1em;
-  color: var(--orange);
+  color: var(--blue-green);
   margin-bottom: 0.5rem;
 }
 .step-card h3 {
@@ -535,7 +537,7 @@ ul { list-style: none; }
   color: var(--gray-mid);
   margin-top: 0.5rem;
 }
-.addon-note a { color: var(--orange); }
+.addon-note a { color: var(--blue-green); }
 .addon-note a:hover { text-decoration: underline; }
 
 /* ══════════════════════════════
@@ -601,7 +603,7 @@ ul { list-style: none; }
 .faq-icon {
   font-size: 1.5rem;
   font-weight: 300;
-  color: var(--orange);
+  color: var(--blue-green);
   flex-shrink: 0;
   line-height: 1;
   transition: transform var(--t-med);
@@ -682,6 +684,13 @@ ul { list-style: none; }
   color: var(--gray-dark);
   margin-bottom: 0.5rem;
 }
+.prose a {
+  color: var(--blue-green);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose a:hover { color: var(--blue-green-hover); }
 
 /* ══════════════════════════════
    ABOUT
