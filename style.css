@@ -9,6 +9,7 @@
 :root {
   --white: #FFFFFF;
   --off-white: #F7F7F5;
+  --color-warm-white: #FDF6EC;
   --black: #023047;
   --orange: #FFB703;
   --orange-hover: #FFA000;
@@ -62,6 +63,11 @@ ul { list-style: none; }
   letter-spacing: 0.02em;
   text-align: center;
   margin-bottom: 0.5rem;
+}
+/* Amber accent rule under all H2 section headings, site-wide */
+h2 {
+  border-bottom: 3px solid var(--orange);
+  padding-bottom: 0.4rem;
 }
 .section-subhead {
   font-size: 1.05rem;
@@ -238,7 +244,15 @@ ul { list-style: none; }
   flex-direction: column;
   justify-content: center;
   padding: 4rem 5% 4rem 7%;
-  background: var(--white);
+  background-color: var(--white);
+  /* Subtle 4% amber diagonal stripe overlay to break up the flat background */
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 183, 3, 0.04) 0,
+    rgba(255, 183, 3, 0.04) 2px,
+    transparent 2px,
+    transparent 14px
+  );
   animation: heroEntrance 600ms ease-out both;
 }
 @keyframes heroEntrance {
@@ -353,7 +367,7 @@ ul { list-style: none; }
   background: var(--white);
   padding: 6rem 2rem;
 }
-.section-block.alt { background: var(--off-white); }
+.section-block.alt { background: var(--color-warm-white); }
 
 .steps-grid {
   display: grid;
@@ -398,7 +412,7 @@ ul { list-style: none; }
    PRICING
 ══════════════════════════════ */
 .pricing {
-  background: var(--off-white);
+  background: var(--color-warm-white);
   padding: 6rem 2rem;
 }
 
@@ -544,9 +558,9 @@ ul { list-style: none; }
    TRUST MARQUEE
 ══════════════════════════════ */
 .trust-bar {
-  background: var(--white);
-  border-top: 1px solid var(--gray-light);
-  border-bottom: 1px solid var(--gray-light);
+  background: var(--orange);
+  border-top: 1px solid rgba(2,48,71,0.12);
+  border-bottom: 1px solid rgba(2,48,71,0.12);
   overflow: hidden;
   padding: 1.25rem 0;
 }
@@ -566,17 +580,17 @@ ul { list-style: none; }
 }
 .marquee-inner span {
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--black);
   flex-shrink: 0;
 }
-.paw-sep { color: var(--orange); }
+.paw-sep { color: var(--black); }
 
 /* ══════════════════════════════
    FAQ
 ══════════════════════════════ */
 .faq {
-  background: var(--off-white);
+  background: var(--color-warm-white);
   padding: 6rem 2rem;
 }
 .faq-list {
