@@ -68,7 +68,7 @@ Visit alamolitterpatrol.com and click through every nav link. Confirm:
 
 - **Tally form ID:** `LZ6aOJ` — this is wired into 30+ buttons/links. Don't change unless replacing the form entirely.
 - **Email:** `hello@alamolitterpatrol.com` — Namecheap forwards this to Shawn's Gmail.
-- **Color palette:** `#FFFFFF` (white) / `#111111` (black) / `#FF5F1F` (orange). 70/20/10 ratio.
+- **Color palette:** `#FFFFFF` (white) / `#023047` (deep space blue) / `#FFB703` (amber flame) / `#219EBC` (blue green). ~70/20/7/3 ratio. All colors route through CSS variables in the `:root` block of `style.css` — `--black` (deep blue), `--orange` / `--orange-hover` (amber; variable names kept for compatibility), and `--blue-green` / `--blue-green-hover`. **Contrast rule:** amber is light — any text on an amber background must be dark (`var(--black)`), never white; amber as text only on dark backgrounds. Use `--blue-green` for secondary touches (links, active nav, hover states).
 - **Fonts:** Bebas Neue (display) + DM Sans (body) — loaded from Google Fonts in `style.css`.
 - **No build step:** Plain HTML/CSS/JS. No frameworks, no bundler, no Node. Netlify deploys the static files as-is.
 
