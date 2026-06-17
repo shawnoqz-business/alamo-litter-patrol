@@ -245,14 +245,10 @@ h2 {
   justify-content: center;
   padding: 4rem 5% 4rem 7%;
   background-color: var(--white);
-  /* Subtle 4% amber diagonal stripe overlay to break up the flat background */
-  background-image: repeating-linear-gradient(
-    45deg,
-    rgba(255, 183, 3, 0.04) 0,
-    rgba(255, 183, 3, 0.04) 2px,
-    transparent 2px,
-    transparent 14px
-  );
+  /* Subtle amber paw-print texture (opacity baked into the SVG) */
+  background-image: url('assets/paw.svg');
+  background-repeat: repeat;
+  background-size: 140px;
   animation: heroEntrance 600ms ease-out both;
 }
 @keyframes heroEntrance {
@@ -367,7 +363,12 @@ h2 {
   background: var(--white);
   padding: 6rem 2rem;
 }
-.section-block.alt { background: var(--color-warm-white); }
+.section-block.alt {
+  background-color: var(--color-warm-white);
+  background-image: url('assets/paw.svg');
+  background-repeat: repeat;
+  background-size: 140px;
+}
 
 .steps-grid {
   display: grid;
@@ -412,7 +413,10 @@ h2 {
    PRICING
 ══════════════════════════════ */
 .pricing {
-  background: var(--color-warm-white);
+  background-color: var(--color-warm-white);
+  background-image: url('assets/paw.svg');
+  background-repeat: repeat;
+  background-size: 140px;
   padding: 6rem 2rem;
 }
 
@@ -554,6 +558,36 @@ h2 {
 .addon-note a { color: var(--blue-green); }
 .addon-note a:hover { text-decoration: underline; }
 
+/* ── Litter delivery add-on callout (distinct from pricing tiers) ── */
+.litter-addon {
+  max-width: 680px;
+  margin: 3rem auto 0;
+  background: var(--white);
+  border: 2px solid var(--orange);
+  border-radius: 8px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+}
+.litter-addon h3 {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  letter-spacing: 0.02em;
+  color: var(--black);
+  margin-bottom: 1rem;
+}
+.litter-addon p {
+  font-size: 1rem;
+  color: var(--gray-dark);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+.litter-addon .addon-fine {
+  font-size: 0.85rem;
+  color: var(--gray-mid);
+  font-style: italic;
+  margin-bottom: 1.5rem;
+}
+
 /* ══════════════════════════════
    TRUST MARQUEE
 ══════════════════════════════ */
@@ -590,7 +624,10 @@ h2 {
    FAQ
 ══════════════════════════════ */
 .faq {
-  background: var(--color-warm-white);
+  background-color: var(--color-warm-white);
+  background-image: url('assets/paw.svg');
+  background-repeat: repeat;
+  background-size: 140px;
   padding: 6rem 2rem;
 }
 .faq-list {
@@ -643,7 +680,10 @@ h2 {
    CTA BAND
 ══════════════════════════════ */
 .cta-band {
-  background: var(--black);
+  background-color: var(--black);
+  background-image: url('assets/paw.svg');
+  background-repeat: repeat;
+  background-size: 140px;
   color: var(--white);
   text-align: center;
   padding: 6rem 2rem;

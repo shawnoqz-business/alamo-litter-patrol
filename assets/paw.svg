@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+  <!-- Paw print, amber #FFB703 at ~5% opacity baked in for a subtle tiling texture -->
+  <g fill="#FFB703" fill-opacity="0.05">
+    <ellipse cx="60" cy="74" rx="22" ry="18"/>
+    <ellipse cx="34" cy="50" rx="9" ry="13"/>
+    <ellipse cx="51" cy="38" rx="9.5" ry="14"/>
+    <ellipse cx="69" cy="38" rx="9.5" ry="14"/>
+    <ellipse cx="86" cy="50" rx="9" ry="13"/>
+  </g>
+</svg>
