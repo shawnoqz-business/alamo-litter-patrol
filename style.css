@@ -588,6 +588,57 @@ h2 {
   margin-bottom: 1.5rem;
 }
 
+/* ── Setup fee callout (tiered, with waiver) ── */
+.setup-callout {
+  max-width: 520px;
+  margin: 2.5rem auto 0;
+  background: var(--white);
+  border: 1px solid rgba(2,48,71,0.12);
+  border-left: 4px solid var(--orange);
+  border-radius: 8px;
+  padding: 1.75rem 1.75rem 1.5rem;
+  text-align: left;
+}
+.setup-callout h3 {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  letter-spacing: 0.02em;
+  color: var(--black);
+  margin-bottom: 0.75rem;
+}
+.setup-callout p {
+  font-size: 0.95rem;
+  color: var(--gray-dark);
+  line-height: 1.65;
+  margin-bottom: 1rem;
+}
+.setup-tiers {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 1.25rem;
+}
+.setup-tiers td {
+  padding: 0.55rem 0;
+  font-size: 0.95rem;
+  color: var(--gray-dark);
+  border-bottom: 1px solid rgba(2,48,71,0.08);
+}
+.setup-tiers tr:last-child td { border-bottom: none; }
+.setup-tiers td:last-child {
+  text-align: right;
+  font-weight: 700;
+  color: var(--black);
+}
+.setup-callout .setup-waiver {
+  margin-bottom: 0;
+  padding: 0.85rem 1rem;
+  background: var(--off-white);
+  border-radius: 6px;
+  font-size: 0.92rem;
+  color: var(--gray-dark);
+}
+.setup-callout .setup-waiver strong { color: var(--black); }
+
 /* ══════════════════════════════
    TRUST MARQUEE
 ══════════════════════════════ */
