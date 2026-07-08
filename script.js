@@ -87,11 +87,21 @@ document.querySelectorAll('.ptab').forEach(tab => {
   });
 });
 
-// ── Email capture slide-in ──
-(function emailCapture() {
-  const STORAGE_KEY = 'alp_email_capture';
+// ── Promo popup (rotating announcements / discounts / exclusivity offers) ──
+(function promoPopup() {
+  const STORAGE_KEY = 'alp_promo_popup';
   const DISMISS_DAYS = 7;
   const TRIGGER_PERCENT = 47; // slides in between 45–50% scroll depth
+
+  // Edit these to swap in the next promo. PROMO_EXPIRES hides the popup automatically once it passes.
+  const PROMO_BADGE = '🐾 Limited Time';
+  const PROMO_HEADLINE = 'Founding members lock in $0 setup fee.';
+  const PROMO_COPY = "Book your first cleaning before August 31, 2026 and the setup fee's gone for good.";
+  const PROMO_CTA_TEXT = 'Book Now';
+  const PROMO_CTA_LINK = '/book.html';
+  const PROMO_EXPIRES = new Date('2026-09-01T00:00:00-05:00');
+
+  if (Date.now() >= PROMO_EXPIRES.getTime()) return;
 
   let stored = null;
   try {
@@ -101,7 +111,7 @@ document.querySelectorAll('.ptab').forEach(tab => {
   }
 
   if (stored) {
-    if (stored.status === 'subscribed') return;
+    if (stored.status === 'converted') return;
     if (stored.status === 'dismissed') {
       const elapsedDays = (Date.now() - stored.ts) / (1000 * 60 * 60 * 24);
       if (elapsedDays < DISMISS_DAYS) return;
@@ -115,24 +125,17 @@ document.querySelectorAll('.ptab').forEach(tab => {
   }
 
   const widget = document.createElement('div');
-  widget.className = 'email-capture';
+  widget.className = 'promo-popup';
   widget.setAttribute('role', 'dialog');
-  widget.setAttribute('aria-label', 'Email signup offer');
+  widget.setAttribute('aria-label', 'Promotional offer');
   widget.innerHTML = `
-    <button type="button" class="email-capture-close" aria-label="Close">&times;</button>
-    <div class="email-capture-content">
-      <h3 class="email-capture-headline">Founding members in our service area lock in $0 setup fee.</h3>
-      <p class="email-capture-copy">Not sure if we're on your street yet? <a href="/service-area.html" style="color:var(--orange);font-weight:600;">Check your service area</a> — we're adding new zips as we grow.</p>
-      <form class="email-capture-form" name="email-signup" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-        <input type="hidden" name="form-name" value="email-signup" />
-        <div class="email-capture-honeypot">
-          <label>Don't fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
-        </div>
-        <input type="email" name="email" class="email-capture-input" placeholder="you@email.com" aria-label="Email address" required />
-        <button type="submit" class="btn btn-orange email-capture-submit">Waive My Setup Fee</button>
-        <p class="email-capture-error" hidden>Something went wrong. Please try again.</p>
-      </form>
-      <button type="button" class="email-capture-dismiss-link">No thanks</button>
+    <button type="button" class="promo-popup-close" aria-label="Close">&times;</button>
+    <div class="promo-popup-content">
+      <span class="promo-popup-badge">${PROMO_BADGE}</span>
+      <h3 class="promo-popup-headline">${PROMO_HEADLINE}</h3>
+      <p class="promo-popup-copy">${PROMO_COPY}</p>
+      <a href="${PROMO_CTA_LINK}" class="btn btn-orange promo-popup-cta">${PROMO_CTA_TEXT}</a>
+      <button type="button" class="promo-popup-dismiss-link">No thanks</button>
     </div>
   `;
   document.body.appendChild(widget);
@@ -150,34 +153,9 @@ document.querySelectorAll('.ptab').forEach(tab => {
     remember('dismissed');
   }
 
-  widget.querySelector('.email-capture-close').addEventListener('click', dismiss);
-  widget.querySelector('.email-capture-dismiss-link').addEventListener('click', dismiss);
-
-  const form = widget.querySelector('.email-capture-form');
-  const errorMsg = widget.querySelector('.email-capture-error');
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    errorMsg.hidden = true;
-
-    const data = new FormData(form);
-    if (data.get('bot-field')) return; // honeypot tripped — silently drop
-
-    fetch('/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams(data).toString(),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error('Submit failed');
-        widget.querySelector('.email-capture-content').innerHTML =
-          '<p class="email-capture-thanks"><strong>You\'re on the list!</strong> We\'ll email you the moment we\'re booking in your area.</p>';
-        remember('subscribed');
-      })
-      .catch(() => {
-        errorMsg.hidden = false;
-      });
-  });
+  widget.querySelector('.promo-popup-close').addEventListener('click', dismiss);
+  widget.querySelector('.promo-popup-dismiss-link').addEventListener('click', dismiss);
+  widget.querySelector('.promo-popup-cta').addEventListener('click', () => remember('converted'));
 
   let triggered = false;
   function onScroll() {
