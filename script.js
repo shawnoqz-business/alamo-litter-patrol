@@ -130,7 +130,7 @@ document.querySelectorAll('.ptab').forEach(tab => {
         </div>
         <input type="email" name="email" class="email-capture-input" placeholder="you@email.com" aria-label="Email address" required />
         <button type="submit" class="btn btn-orange email-capture-submit">Waive My Setup Fee</button>
-        <p class="email-capture-error" hidden>Something went wrong &mdash; please try again.</p>
+        <p class="email-capture-error" hidden>Something went wrong. Please try again.</p>
       </form>
       <button type="button" class="email-capture-dismiss-link">No thanks</button>
     </div>
