@@ -94,7 +94,7 @@ document.querySelectorAll('.ptab').forEach(tab => {
   const TRIGGER_PERCENT = 47; // slides in between 45–50% scroll depth
 
   // Edit these to swap in the next promo. PROMO_EXPIRES hides the popup automatically once it passes.
-  const PROMO_BADGE = '🐾 Limited Time';
+  const PROMO_BADGE = '<svg class="promo-popup-paw" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="16" rx="6" ry="5"/><circle cx="4" cy="8" r="2.5"/><circle cx="9" cy="3" r="2.3"/><circle cx="15" cy="3" r="2.3"/><circle cx="20" cy="8" r="2.5"/></svg> Limited Time';
   const PROMO_HEADLINE = 'Founding members lock in $0 setup fee.';
   const PROMO_COPY = "Book your first cleaning before August 31, 2026 and the setup fee's gone for good.";
   const PROMO_CTA_TEXT = 'Book Now';

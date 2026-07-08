@@ -1124,7 +1124,7 @@ footer {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  background: var(--orange);
+  background: var(--blue-green);
   color: var(--black);
   font-family: var(--font-body);
   font-size: 0.7rem;
@@ -1134,6 +1134,12 @@ footer {
   padding: 0.3rem 0.7rem;
   border-radius: 999px;
   margin-bottom: 0.75rem;
+}
+.promo-popup-paw {
+  width: 12px;
+  height: 12px;
+  fill: #000000;
+  flex-shrink: 0;
 }
 
 .promo-popup-headline {
