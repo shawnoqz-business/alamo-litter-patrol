@@ -1124,7 +1124,7 @@ footer {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  background: var(--blue-green);
+  background: var(--orange);
   color: var(--black);
   font-family: var(--font-body);
   font-size: 0.7rem;
