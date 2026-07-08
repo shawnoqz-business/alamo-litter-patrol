@@ -12,7 +12,7 @@ exports.handler = async (event) => {
   let email = 'unknown';
   try {
     const body = JSON.parse(event.body);
-    email = body.payload?.data?.email || body.payload?.human_fields?.email || email;
+    email = body.data?.email || body.human_fields?.Email || email;
   } catch (e) {
     console.error('Failed to parse form submission payload', e);
   }
