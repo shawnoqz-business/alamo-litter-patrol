@@ -67,8 +67,21 @@
         </div>
 
         <div class="prose" style="margin-top:3rem;">
-          <h2>Not in our zone yet?</h2>
-          <p>We're expanding fast. <a href="/contact.html" style="color:var(--orange);font-weight:600;">Drop us a note</a> with your ZIP and we'll put you on the waitlist. Once we have a few customers in your area, we open the zone.</p>
+          <h2>We're not on your street — yet.</h2>
+          <p>We're growing one neighborhood at a time, and yours isn't on the map quite yet. Drop your email and we'll ping you the moment we roll into your area — founding-member perks included. The more people who raise their hand in a zip code, the faster we get there. So tell your cat-owning neighbors.</p>
+
+          <form class="waitlist-form" name="out-of-area-waitlist" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="out-of-area-waitlist" />
+            <p class="waitlist-honeypot">
+              <label>Don't fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+            </p>
+            <div class="waitlist-fields">
+              <input type="email" name="email" class="waitlist-input" placeholder="you@email.com" aria-label="Email address" required />
+              <input type="text" name="zip" class="waitlist-input" placeholder="ZIP code" aria-label="ZIP code" required pattern="[0-9]{5}" inputmode="numeric" />
+              <button type="submit" class="btn btn-orange waitlist-submit">Add me to the waitlist</button>
+            </div>
+            <p class="waitlist-error" hidden>Something went wrong. Please try again.</p>
+          </form>
 
           <h2>Why we stay local (for now)</h2>
           <p>Tight routes mean reliable service. We'd rather show up on time, every time, in a small zone than be late or flaky across the whole city. As we hire, we expand.</p>

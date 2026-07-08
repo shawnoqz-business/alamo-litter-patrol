@@ -121,8 +121,8 @@ document.querySelectorAll('.ptab').forEach(tab => {
   widget.innerHTML = `
     <button type="button" class="email-capture-close" aria-label="Close">&times;</button>
     <div class="email-capture-content">
-      <h3 class="email-capture-headline">No setup fee for early sign-ups.</h3>
-      <p class="email-capture-copy">Leave your email and we'll waive your setup fee when you're ready to book. No spam, just updates as we roll out in your neighborhood.</p>
+      <h3 class="email-capture-headline">Founding members in our service area lock in $0 setup fee.</h3>
+      <p class="email-capture-copy">Not sure if we're on your street yet? <a href="/service-area.html" style="color:var(--orange);font-weight:600;">Check your service area</a> — we're adding new zips as we grow.</p>
       <form class="email-capture-form" name="email-signup" method="POST" data-netlify="true" netlify-honeypot="bot-field">
         <input type="hidden" name="form-name" value="email-signup" />
         <div class="email-capture-honeypot">
@@ -193,4 +193,34 @@ document.querySelectorAll('.ptab').forEach(tab => {
     }
   }
   window.addEventListener('scroll', onScroll, { passive: true });
+})();
+
+// ── Out-of-area waitlist form (service-area page) ──
+(function waitlistForm() {
+  const form = document.querySelector('.waitlist-form');
+  if (!form) return;
+
+  const errorMsg = form.querySelector('.waitlist-error');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    errorMsg.hidden = true;
+
+    const data = new FormData(form);
+    if (data.get('bot-field')) return; // honeypot tripped — silently drop
+
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(data).toString(),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Submit failed');
+        form.outerHTML =
+          '<p class="waitlist-thanks"><strong>You\'re on the list!</strong> We\'ll reach out the second we\'re cleaning boxes in your neighborhood. Hang tight — your cats are counting on you.</p>';
+      })
+      .catch(() => {
+        errorMsg.hidden = false;
+      });
+  });
 })();

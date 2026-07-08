@@ -10,17 +10,25 @@ exports.handler = async (event) => {
   }
 
   let email = 'unknown';
+  let formName = '';
+  let zip = '';
   try {
     const body = JSON.parse(event.body);
+    formName = body.form_name || '';
     email = body.data?.email || body.human_fields?.Email || email;
+    zip = body.data?.zip || '';
   } catch (e) {
     console.error('Failed to parse form submission payload', e);
   }
 
+  const text = formName === 'out-of-area-waitlist'
+    ? `WAITLIST (out of area): ${email} (${zip})`
+    : `New email signup: ${email}`;
+
   await fetch(webhookUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text: `New email signup: ${email}` }),
+    body: JSON.stringify({ text }),
   });
 
   return { statusCode: 200, body: 'ok' };
