@@ -565,6 +565,18 @@ h2 {
 .promo-note-bar {
   padding: 1.5rem 1.5rem;
 }
+/* Each bar matches the section directly beneath it, so the strip reads as part of
+   that section rather than as a white band floating above it. */
+.promo-note-bar--paw {
+  background-color: var(--white);
+  /* Same subtle amber paw texture as .hero-content — keep these in sync. */
+  background-image: url('assets/paw.svg');
+  background-repeat: repeat;
+  background-size: 140px;
+}
+.promo-note-bar--navy {
+  background: var(--black);
+}
 .promo-note {
   display: flex;
   align-items: center;
@@ -574,10 +586,11 @@ h2 {
   max-width: 800px;
   margin: 0 auto;
   padding: 0.85rem 1.35rem;
-  background: var(--white);
+  background: transparent;
   border: 2px solid var(--blue-green);
   border-radius: 6px;
 }
+.promo-note-bar--navy .promo-note p { color: var(--white); }
 .promo-note-tag {
   flex-shrink: 0;
   background: var(--blue-green);
