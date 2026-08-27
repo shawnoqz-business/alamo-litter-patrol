@@ -231,19 +231,16 @@ h2 {
   inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
-  object-position: center 30%;
+  /* At the desktop and portrait-phone hero shapes this photo crops horizontally only,
+     so this value does nothing there. It matters on short, wide viewports (landscape
+     phones), where anchoring high keeps Bug's head in frame instead of her feet. */
+  object-position: center 12%;
 }
 .hero-photo::after {
   content: '';
   position: absolute;
   inset: 0;
-  /* Feather the photo into the white it butts against — the announcement bar above
-     and the paw-texture panel to the right — so neither edge reads as a hard line.
-     Vignette stays last so the feathers sit on top of it. */
-  background:
-    linear-gradient(to bottom, var(--white) 0%, rgba(255,255,255,0) 8%),
-    linear-gradient(to right, rgba(255,255,255,0) 80%, var(--white) 100%),
-    radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.4) 100%);
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.4) 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -1113,14 +1110,6 @@ footer {
     min-height: auto;
   }
   .hero-photo { height: 42vh; min-height: 260px; }
-  /* Stacked layout: the photo now meets white above AND below, not to the right. */
-  .hero-photo::after {
-    background:
-      linear-gradient(to bottom,
-        var(--white) 0%, rgba(255,255,255,0) 8%,
-        rgba(255,255,255,0) 88%, var(--white) 100%),
-      radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.4) 100%);
-  }
   .hero-content { padding: 3rem 1.75rem; }
   .hero-subhead { max-width: 100%; }
 
