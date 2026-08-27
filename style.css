@@ -225,6 +225,11 @@ h2 {
   position: relative;
   overflow: hidden;
   background: var(--black);
+  /* Softens where the photo meets the announcement bar above and the paw panel to
+     the right. The shadow falls OUTSIDE the image, into the neighbouring sections,
+     so the seam stops being a knife edge without anything overlaying Bug herself. */
+  box-shadow: 0 0 40px 8px rgba(2, 48, 71, 0.20);
+  z-index: 1;
 }
 .hero-photo img {
   position: absolute;
@@ -236,32 +241,13 @@ h2 {
      phones), where anchoring high keeps Bug's head in frame instead of her feet. */
   object-position: center 12%;
 }
-/* Soften only the two edges that butt against other content: the announcement bar
-   above and the paw-texture panel to the right. Masked backdrop-filter blurs the
-   photo itself in those bands. Mask layers union by default. Browsers without
-   backdrop-filter simply get the original crisp edge. */
-.hero-photo::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  -webkit-backdrop-filter: blur(9px);
-  backdrop-filter: blur(9px);
-  -webkit-mask-image:
-    linear-gradient(to bottom, #000 0%, transparent 8%),
-    linear-gradient(to right, transparent 90%, #000 100%);
-  mask-image:
-    linear-gradient(to bottom, #000 0%, transparent 8%),
-    linear-gradient(to right, transparent 90%, #000 100%);
-  pointer-events: none;
-  z-index: 1;
-}
 .hero-photo::after {
   content: '';
   position: absolute;
   inset: 0;
   background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.4) 100%);
   pointer-events: none;
-  z-index: 2;
+  z-index: 1;
 }
 
 .hero-content {
@@ -1129,15 +1115,6 @@ footer {
     min-height: auto;
   }
   .hero-photo { height: 42vh; min-height: 260px; }
-  /* Stacked layout: the photo meets content above and below, not to the right. */
-  .hero-photo::before {
-    -webkit-mask-image:
-      linear-gradient(to bottom, #000 0%, transparent 10%),
-      linear-gradient(to top, #000 0%, transparent 10%);
-    mask-image:
-      linear-gradient(to bottom, #000 0%, transparent 10%),
-      linear-gradient(to top, #000 0%, transparent 10%);
-  }
   .hero-content { padding: 3rem 1.75rem; }
   .hero-subhead { max-width: 100%; }
 
