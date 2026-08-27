@@ -195,7 +195,7 @@ document.querySelectorAll('.ptab').forEach(tab => {
       .then((res) => {
         if (!res.ok) throw new Error('Submit failed');
         form.outerHTML =
-          '<p class="waitlist-thanks"><strong>You\'re on the list!</strong> We\'ll reach out the second we\'re cleaning boxes in your neighborhood. Hang tight — your cats are counting on you.</p>';
+          '<p class="waitlist-thanks"><strong>You\'re on the list!</strong> We\'ll reach out the second we\'re cleaning boxes in your neighborhood. Hang tight. Your cats are counting on you.</p>';
       })
       .catch(() => {
         errorMsg.hidden = false;
