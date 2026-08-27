@@ -94,12 +94,16 @@ document.querySelectorAll('.ptab').forEach(tab => {
   const TRIGGER_PERCENT = 47; // slides in between 45–50% scroll depth
 
   // Edit these to swap in the next promo. PROMO_EXPIRES hides the popup automatically once it passes.
-  const PROMO_BADGE = '<svg class="promo-popup-paw" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="16" rx="6" ry="5"/><circle cx="4" cy="8" r="2.5"/><circle cx="9" cy="3" r="2.3"/><circle cx="15" cy="3" r="2.3"/><circle cx="20" cy="8" r="2.5"/></svg> Limited Time';
-  const PROMO_HEADLINE = 'Founding members lock in $0 setup fee.';
-  const PROMO_COPY = "Book your first cleaning before <strong>September 30, 2026</strong> and the setup fee's gone for good.";
+  // MANUAL OFF-SWITCH: this promo is capped by customer count (first 10), not by date, and the site
+  // cannot detect that count on its own. PROMO_EXPIRES is only a backstop, not the real cutoff: pull
+  // it in once the 10th customer signs. Same reminder lives in index.html and book.html, which carry
+  // the matching announcement bar. All three need turning off together.
+  const PROMO_BADGE = '<svg class="promo-popup-paw" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="16" rx="6" ry="5"/><circle cx="4" cy="8" r="2.5"/><circle cx="9" cy="3" r="2.3"/><circle cx="15" cy="3" r="2.3"/><circle cx="20" cy="8" r="2.5"/></svg> Founding Member';
+  const PROMO_HEADLINE = 'First week free, no setup fee.';
+  const PROMO_COPY = 'Good for our first <strong>10 customers</strong>.';
   const PROMO_CTA_TEXT = 'Book Now';
   const PROMO_CTA_LINK = '/book.html';
-  const PROMO_EXPIRES = new Date('2026-10-01T00:00:00-05:00');
+  const PROMO_EXPIRES = new Date('2027-01-01T00:00:00-06:00');
 
   if (Date.now() >= PROMO_EXPIRES.getTime()) return;
 
