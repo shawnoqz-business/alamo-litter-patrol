@@ -237,7 +237,13 @@ h2 {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.4) 100%);
+  /* Feather the photo into the white it butts against — the announcement bar above
+     and the paw-texture panel to the right — so neither edge reads as a hard line.
+     Vignette stays last so the feathers sit on top of it. */
+  background:
+    linear-gradient(to bottom, var(--white) 0%, rgba(255,255,255,0) 16%),
+    linear-gradient(to right, rgba(255,255,255,0) 74%, var(--white) 100%),
+    radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.4) 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -577,6 +583,9 @@ h2 {
 .promo-note-bar--navy {
   background: var(--black);
 }
+/* Accent modifier, independent of the background modifier above. */
+.promo-note-bar--amber .promo-note { border-color: var(--orange); }
+.promo-note-bar--amber .promo-note-tag { background: var(--orange); }
 .promo-note {
   display: flex;
   align-items: center;
@@ -599,8 +608,12 @@ h2 {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 0.3rem 0.6rem;
-  border-radius: 3px;
+  /* Tag shape: the left edge comes to a point aimed at the sentence. The extra
+     left padding keeps the text clear of the point. Browsers without clip-path
+     just get a rectangle with rounded right corners. */
+  padding: 0.32rem 0.7rem 0.32rem 0.95rem;
+  border-radius: 0 4px 4px 0;
+  clip-path: polygon(0.55rem 0, 100% 0, 100% 100%, 0.55rem 100%, 0 50%);
   white-space: nowrap;
 }
 .promo-note p {
@@ -1100,6 +1113,14 @@ footer {
     min-height: auto;
   }
   .hero-photo { height: 42vh; min-height: 260px; }
+  /* Stacked layout: the photo now meets white above AND below, not to the right. */
+  .hero-photo::after {
+    background:
+      linear-gradient(to bottom,
+        var(--white) 0%, rgba(255,255,255,0) 14%,
+        rgba(255,255,255,0) 84%, var(--white) 100%),
+      radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.4) 100%);
+  }
   .hero-content { padding: 3rem 1.75rem; }
   .hero-subhead { max-width: 100%; }
 
