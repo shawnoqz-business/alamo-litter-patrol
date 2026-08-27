@@ -561,6 +561,40 @@ h2 {
 .addon-note a { color: var(--blue-green); }
 .addon-note a:hover { text-decoration: underline; }
 
+/* ── Founding-rate notice (pricing page + homepage teaser) ── */
+.founding-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: fit-content;
+  max-width: 620px;
+  margin: 0 auto 2.5rem;
+  padding: 0.85rem 1.35rem;
+  background: var(--color-warm-white);
+  border: 2px solid var(--orange);
+  border-radius: 6px;
+}
+.founding-note .founding-tag {
+  flex-shrink: 0;
+  background: var(--orange);
+  color: var(--black);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.6rem;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+.founding-note p {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--black);
+  line-height: 1.5;
+  text-align: left;
+}
+
 /* ── Litter delivery add-on callout (distinct from pricing tiers) ── */
 .litter-addon {
   max-width: 680px;
@@ -1061,6 +1095,14 @@ footer {
 
   .pricing-grid { grid-template-columns: 1fr; max-width: 380px; margin-left: auto; margin-right: auto; }
   .price-card.featured { order: -1; }
+
+  .founding-note {
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 380px;
+    padding: 1rem 1.15rem;
+  }
+  .founding-note p { text-align: center; font-size: 0.95rem; }
 
   .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
   .about-stats { grid-template-columns: 1fr; gap: 1.5rem; }
