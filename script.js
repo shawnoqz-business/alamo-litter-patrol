@@ -202,3 +202,34 @@ document.querySelectorAll('.ptab').forEach(tab => {
       });
   });
 })();
+
+// ── Founding member form (founding-member.html, mailer QR landing page) ──
+(function foundingMemberForm() {
+  const form = document.querySelector('.founding-form');
+  if (!form) return;
+
+  const errorMsg = form.querySelector('.waitlist-error');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    errorMsg.hidden = true;
+
+    const data = new FormData(form);
+    if (data.get('bot-field')) return; // honeypot tripped — silently drop
+
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(data).toString(),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Submit failed');
+        if (typeof fbq === 'function') fbq('track', 'Lead');
+        form.outerHTML =
+          '<p class="waitlist-thanks"><strong>You\'re in!</strong> We\'ll text or call within 24 hours to schedule your free first week. Welcome to the Patrol.</p>';
+      })
+      .catch(() => {
+        errorMsg.hidden = false;
+      });
+  });
+})();

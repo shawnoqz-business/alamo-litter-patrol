@@ -869,7 +869,7 @@ h2 {
   color: var(--gray-mid);
 }
 
-.waitlist-form { max-width: 560px; margin-top: 0.5rem; }
+.waitlist-form, .founding-form { max-width: 560px; margin-top: 0.5rem; }
 .waitlist-honeypot {
   position: absolute;
   left: -9999px;
