@@ -230,7 +230,7 @@ document.querySelectorAll('.ptab').forEach(tab => {
         if (!res.ok) throw new Error('Submit failed');
         if (typeof fbq === 'function') fbq('track', 'Lead');
         form.outerHTML =
-          '<p class="waitlist-thanks"><strong>You\'re in!</strong> We\'ll text or call within 24 hours to schedule your free first week. Welcome to the Patrol.</p>';
+          '<p class="waitlist-thanks"><strong>You\'re in!</strong> We\'ll text or call within 24-48 hours to schedule your free first week. Welcome to the Patrol.</p>';
       })
       .catch(() => {
         errorMsg.hidden = false;
