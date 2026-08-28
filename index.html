@@ -159,7 +159,13 @@
     <!-- ══ HERO ══ -->
     <section id="hero" aria-label="Hero">
       <div class="hero-photo">
-        <img src="assets/bug-hero-glow.jpg" alt="Bug, a tuxedo cat walking toward the camera through green ground cover" fetchpriority="high" />
+        <!-- WebP first, JPEG fallback for anything that can't take it. Same 1800x1350
+             source; the WebP is 43% lighter at visually identical quality. This is the
+             LCP image, hence fetchpriority. -->
+        <picture>
+          <source srcset="assets/bug-hero-glow.webp" type="image/webp" />
+          <img src="assets/bug-hero-glow.jpg" alt="Bug, a tuxedo cat walking toward the camera through green ground cover" fetchpriority="high" />
+        </picture>
       </div>
       <div class="hero-content">
         <p class="eyebrow">San Antonio's Cat Litter Service</p>
