@@ -188,19 +188,54 @@ exports.handler = async (event) => {
   if (booking.FOUNDING_MEMBER_PROMO_ACTIVE) fields[FIELDS.foundingMember] = true;
   if (priced.listedSetupFee === 0) fields[FIELDS.setupFeeStatus] = 'N/A';
   else if (priced.setupWaived) fields[FIELDS.setupFeeStatus] = 'Waived';
-  // Otherwise left blank: the fee is billed after the first visit, mark Paid then.
+  // Otherwise left blank: a fee is still owed (billed after the first visit),
+  // mark Paid then.
+
+  let setupNote;
+  if (priced.listedSetupFee === 0) setupNote = 'no setup fee';
+  else if (priced.firstBoxCovered) {
+    const why = data.hasSpareBox ? 'own spare box' : 'founding member offer';
+    setupNote = `setup fee $${priced.setupFee} (first box covered by ${why}, listed $${priced.listedSetupFee})`;
+  } else setupNote = `setup fee $${priced.setupFee}`;
 
   const notesParts = [];
   if (data.notes) notesParts.push(data.notes);
-  if (data.hasSpareBox) notesParts.push('Has own spare box (setup fee waived).');
-  notesParts.push(`Quoted $${priced.price}/${priced.per}${priced.seniorApplied ? ' (senior 10% off)' : ''}, setup fee ${priced.setupFee === 0 ? '$0' : `$${priced.setupFee}`}${priced.foundingApplied ? ', founding member offer' : ''}. Booked online.`);
+  notesParts.push(`Quoted $${priced.price}/${priced.per}${priced.seniorApplied ? ' (senior 10% off)' : ''}, ${setupNote}${priced.foundingApplied ? ', founding member' : ''}. Booked online.`);
   fields[FIELDS.notes] = notesParts.join('\n');
+
+  const slackData = {
+    name: data.name,
+    email: data.email,
+    phone: data.phone,
+    address: data.address,
+    zip: data.zip,
+    serviceType: data.serviceType,
+    count: data.count,
+    accessType: data.accessType,
+    serviceDay: data.serviceDay,
+    slotStart: data.slotStart,
+    slotEnd,
+    price: `$${priced.price}/${priced.per}`,
+    setupFee: setupNote,
+    seniorDiscount: data.seniorDiscount,
+    foundingMember: booking.FOUNDING_MEMBER_PROMO_ACTIVE,
+    accessNotes: data.accessNotes,
+    notes: data.notes,
+    stripeCustomerId: data.stripeCustomerId,
+  };
 
   let record;
   try {
     record = await createRecord(CUSTOMERS_TABLE, fields);
   } catch (err) {
     console.error('create-booking: Airtable write failed', err);
+    // The card is already on file, so make sure Shawn hears about it even
+    // though the customer record did not land.
+    try {
+      await notify({ formName: 'booking-failed', data: { ...slackData, failure: err.message } });
+    } catch (slackErr) {
+      console.error('create-booking: Slack failure notice failed', slackErr);
+    }
     return json(502, {
       error: 'Your card was saved but we could not finish the booking. Please email hello@alamolitterpatrol.com and we will sort it out.',
       detail: err.message,
@@ -209,29 +244,7 @@ exports.handler = async (event) => {
 
   // 4. Slack. A failure here must not fail the booking.
   try {
-    await notify({
-      formName: 'booking',
-      data: {
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        address: data.address,
-        zip: data.zip,
-        serviceType: data.serviceType,
-        count: data.count,
-        accessType: data.accessType,
-        serviceDay: data.serviceDay,
-        slotStart: data.slotStart,
-        slotEnd,
-        price: `$${priced.price}/${priced.per}`,
-        setupFee: priced.setupFee === 0 ? '$0' : `$${priced.setupFee}`,
-        seniorDiscount: data.seniorDiscount,
-        foundingMember: booking.FOUNDING_MEMBER_PROMO_ACTIVE,
-        accessNotes: data.accessNotes,
-        notes: data.notes,
-        recordId: record.id,
-      },
-    });
+    await notify({ formName: 'booking', data: { ...slackData, recordId: record.id } });
   } catch (err) {
     console.error('create-booking: Slack notification failed', err);
   }
@@ -249,7 +262,9 @@ exports.handler = async (event) => {
       price: priced.price,
       per: priced.per,
       setupFee: priced.setupFee,
+      listedSetupFee: priced.listedSetupFee,
       setupWaived: priced.setupWaived,
+      firstBoxCovered: priced.firstBoxCovered,
       foundingApplied: priced.foundingApplied,
       seniorApplied: priced.seniorApplied,
     },

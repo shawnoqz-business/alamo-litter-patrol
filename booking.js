@@ -143,16 +143,17 @@
     if (porch && !rules.porchAllowed) return { error: 'home-only' };
     const base = (porch ? rules.porch : rules.homeEntry)[sel.count - 1];
     const price = sel.seniorDiscount ? Math.round(base * (1 - cfg.seniorDiscountRate)) : base;
-    const listedSetupFee = rules.setupFee[sel.count - 1];
-    const foundingApplied = cfg.foundingMemberPromoActive && listedSetupFee > 0;
-    const setupWaived = listedSetupFee > 0 && (sel.hasSpareBox || foundingApplied);
+    const extras = cfg.setupFee.extraBox * (sel.count - 1);
+    const listedSetupFee = rules.hasSetupFee ? cfg.setupFee.firstBox + extras : 0;
+    const foundingApplied = cfg.foundingMemberPromoActive && rules.hasSetupFee;
+    const firstBoxCovered = rules.hasSetupFee && (sel.hasSpareBox || foundingApplied);
     return {
       per: rules.per,
       price,
       basePrice: base,
       listedSetupFee,
-      setupFee: setupWaived ? 0 : listedSetupFee,
-      setupWaived,
+      setupFee: firstBoxCovered ? extras : listedSetupFee,
+      firstBoxCovered,
       foundingApplied,
       seniorApplied: sel.seniorDiscount,
     };
@@ -189,17 +190,22 @@
 
     el.quotePrice.textContent = money(q.price);
     el.quotePer.textContent = `/${q.per}`;
+    const fee = state.config.setupFee;
+    const unit = sel.serviceType === 'Litter-Robot' ? 'unit' : 'box';
     if (q.listedSetupFee === 0) {
       el.quoteSetup.textContent = 'No setup fee.';
-    } else if (q.setupWaived) {
-      el.quoteSetup.innerHTML = `One-time setup fee: <s>${money(q.listedSetupFee)}</s> $0`;
+    } else if (q.firstBoxCovered) {
+      el.quoteSetup.innerHTML = `One-time setup fee: <s>${money(q.listedSetupFee)}</s> ${money(q.setupFee)}`;
+    } else if (sel.count > 1) {
+      el.quoteSetup.textContent = `One-time setup fee: ${money(q.listedSetupFee)} (${money(fee.firstBox)} first ${unit} + ${money(fee.extraBox)} each additional)`;
     } else {
       el.quoteSetup.textContent = `One-time setup fee: ${money(q.listedSetupFee)}`;
     }
     const notes = [];
     if (q.seniorApplied) notes.push(`Senior discount applied (was ${money(q.basePrice)}).`);
-    if (q.foundingApplied) notes.push('Founding member offer: first week free, $0 setup fee.');
-    else if (q.setupWaived) notes.push('Setup fee waived because you have your own spare box.');
+    const extraNote = sel.count > 1 ? ` Additional ${unit}s are ${money(fee.extraBox)} each.` : '';
+    if (q.foundingApplied) notes.push(`Founding member offer: first week free, and the ${money(fee.firstBox)} setup fee for your first ${unit} is on us.${extraNote}`);
+    else if (q.firstBoxCovered) notes.push(`Your spare box covers the ${money(fee.firstBox)} first-${unit} setup fee.${extraNote}`);
     notes.push(q.per === 'week' ? 'Billed weekly after each visit.' : 'Billed per visit, after the visit.');
     el.quoteNote.textContent = notes.join(' ');
   }
@@ -483,7 +489,7 @@
     const items = [
       `<strong>Service:</strong> ${rules.label}, ${b.count} ${unit}${b.count > 1 ? (unit === 'box' ? 'es' : 's') : ''}, ${b.accessType.toLowerCase()}`,
       `<strong>Your window:</strong> ${PLURAL_DAYS[b.serviceDay]}, ${b.slotStart} to ${b.slotEnd}`,
-      `<strong>Price:</strong> ${money(b.price)}/${b.per}${b.seniorApplied ? ' with senior discount' : ''}, setup fee ${b.setupFee === 0 ? '$0' : money(b.setupFee)}${b.foundingApplied ? ' (founding member offer)' : b.setupWaived ? ' (waived)' : ''}`,
+      `<strong>Price:</strong> ${money(b.price)}/${b.per}${b.seniorApplied ? ' with senior discount' : ''}, setup fee ${money(b.setupFee)}${b.firstBoxCovered ? ` (first ${unit} covered${b.foundingApplied ? ' by the founding member offer' : ' by your spare box'})` : ''}`,
       `<strong>Card on file:</strong> saved, nothing charged yet`,
       `<strong>Confirmation to:</strong> ${contact.email}`,
     ];

@@ -10,7 +10,7 @@ const PRICING = {
     per: 'week',
     homeEntry: [25, 40, 55],
     porch: [10, 25, 40],
-    setupFee: [50, 75, 100],
+    hasSetupFee: true,
     porchAllowed: true,
   },
   'Litter-Robot': {
@@ -18,7 +18,7 @@ const PRICING = {
     per: 'visit',
     homeEntry: [70, 95, 120],
     porch: [55, 80, 105],
-    setupFee: [50, 75, 100],
+    hasSetupFee: true,
     porchAllowed: true,
   },
   'Scoop-Only': {
@@ -26,7 +26,7 @@ const PRICING = {
     per: 'visit',
     homeEntry: [20, 30, 40],
     porch: null,
-    setupFee: [0, 0, 0],
+    hasSetupFee: false,
     porchAllowed: false,
   },
   'Dump+Refill': {
@@ -34,20 +34,25 @@ const PRICING = {
     per: 'visit',
     homeEntry: [30, 40, 50],
     porch: null,
-    setupFee: [0, 0, 0],
+    hasSetupFee: false,
     porchAllowed: false,
   },
 };
+
+// One-time setup fee: $50 covers the first stainless steel box (or loaner),
+// then $25 for each additional box or unit. Matches the tiers on pricing.html
+// (1 box $50, 2 boxes $75, 3 boxes $100).
+const SETUP_FEE = { firstBox: 50, extraBox: 25 };
 
 const MAX_BOXES = 3; // above this: custom quote
 const SENIOR_DISCOUNT_RATE = 0.1; // 10% off the service price for 65+
 
 // ── Founding member offer ───────────────────────────────────────────────────
-// MANUAL OFF-SWITCH: the founding member offer (first week free, $0 setup fee)
-// is capped at our first 10 customers, and nothing here can count them. Flip
-// this to false when customer 10 signs. The matching announcement bar in
-// index.html and book.html, and the promo popup in script.js, must be turned
-// off at the same time.
+// MANUAL OFF-SWITCH: the founding member offer (first week free, first box's
+// setup fee covered) is capped at our first 10 customers, and nothing here
+// can count them. Flip this to false when the offer ends. The matching
+// announcement bar in index.html and book.html, and the promo popup in
+// script.js, must be turned off at the same time.
 const FOUNDING_MEMBER_PROMO_ACTIVE = true;
 
 // ── Service area ────────────────────────────────────────────────────────────
@@ -60,8 +65,13 @@ function isServiceZip(zip) {
   return SERVICE_ZIPS.includes(String(zip || '').trim());
 }
 
-// Returns { service, per, price, setupFee, setupWaived, seniorApplied,
-// foundingApplied, error } for a selection. Prices are whole dollars.
+// Prices a selection. All amounts are whole dollars.
+//   price            what they pay per week/visit (after senior discount)
+//   listedSetupFee   the published setup fee for this box count
+//   setupFee         what they actually owe after any first-box coverage
+//   firstBoxCovered  true when the $50 first-box portion is waived (spare box
+//                    or founding member offer); additional boxes still cost
+//                    SETUP_FEE.extraBox each
 function quote({ serviceType, count, accessType, seniorDiscount, hasSpareBox }) {
   const rules = PRICING[serviceType];
   if (!rules) return { error: 'Unknown service type' };
@@ -78,9 +88,10 @@ function quote({ serviceType, count, accessType, seniorDiscount, hasSpareBox }) 
   const seniorApplied = Boolean(seniorDiscount);
   const price = seniorApplied ? Math.round(base * (1 - SENIOR_DISCOUNT_RATE)) : base;
 
-  const listedSetupFee = rules.setupFee[n - 1];
-  const foundingApplied = FOUNDING_MEMBER_PROMO_ACTIVE && listedSetupFee > 0;
-  const setupWaived = listedSetupFee > 0 && (Boolean(hasSpareBox) || foundingApplied);
+  const listedSetupFee = rules.hasSetupFee ? SETUP_FEE.firstBox + SETUP_FEE.extraBox * (n - 1) : 0;
+  const foundingApplied = FOUNDING_MEMBER_PROMO_ACTIVE && rules.hasSetupFee;
+  const firstBoxCovered = rules.hasSetupFee && (Boolean(hasSpareBox) || foundingApplied);
+  const setupFee = firstBoxCovered ? SETUP_FEE.extraBox * (n - 1) : listedSetupFee;
 
   return {
     service: rules.label,
@@ -88,15 +99,18 @@ function quote({ serviceType, count, accessType, seniorDiscount, hasSpareBox }) 
     basePrice: base,
     price,
     listedSetupFee,
-    setupFee: setupWaived ? 0 : listedSetupFee,
-    setupWaived,
+    setupFee,
+    firstBoxCovered,
+    setupWaived: firstBoxCovered && setupFee === 0,
     seniorApplied,
     foundingApplied,
+    hasSpareBox: Boolean(hasSpareBox),
   };
 }
 
 module.exports = {
   PRICING,
+  SETUP_FEE,
   MAX_BOXES,
   SENIOR_DISCOUNT_RATE,
   FOUNDING_MEMBER_PROMO_ACTIVE,

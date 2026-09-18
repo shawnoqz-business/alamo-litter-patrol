@@ -18,16 +18,21 @@ function buildMessage({ formName, data = {}, human = {} }) {
   const email = data.email || human.Email || 'unknown';
   const zip = data.zip || human.Zip || '';
 
-  if (formName === 'booking') {
+  if (formName === 'booking' || formName === 'booking-failed') {
+    const failed = formName === 'booking-failed';
     const lines = [
-      `NEW BOOKING: ${data.name || 'unknown'} - ${email} - ${data.phone || 'no phone'}`,
+      failed
+        ? `BOOKING FAILED (card saved in Stripe, NO Airtable record): ${data.name || 'unknown'} - ${email} - ${data.phone || 'no phone'}`
+        : `NEW BOOKING: ${data.name || 'unknown'} - ${email} - ${data.phone || 'no phone'}`,
       `${data.serviceType || '?'} x${data.count || '?'}, ${data.accessType || '?'}, ${DAY_NAMES[data.serviceDay] || data.serviceDay || '?'} ${data.slotStart || '?'} to ${data.slotEnd || '?'}`,
-      `${data.price || ''}${data.seniorDiscount ? ' (senior discount)' : ''}, setup fee ${data.setupFee || '?'}${data.foundingMember ? ', founding member' : ''}`,
+      `${data.price || ''}${data.seniorDiscount ? ' (senior discount)' : ''}, ${data.setupFee || 'setup fee ?'}${data.foundingMember ? ', founding member' : ''}`,
       `${data.address || ''}${zip ? ` (${zip})` : ''}`,
     ];
     if (data.accessNotes) lines.push(`Access: ${data.accessNotes}`);
     if (data.notes) lines.push(`Notes: ${data.notes}`);
+    if (data.stripeCustomerId) lines.push(`Stripe customer ${data.stripeCustomerId}`);
     if (data.recordId) lines.push(`Airtable record ${data.recordId}`);
+    if (failed) lines.push(`Error: ${data.failure || 'unknown'}. Add this customer to Airtable by hand.`);
     return { text: lines.join('\n'), webhookEnv: 'SLACK_WEBHOOK_URL' };
   }
 

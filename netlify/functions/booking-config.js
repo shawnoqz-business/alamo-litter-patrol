@@ -19,6 +19,7 @@ exports.handler = async (event) => {
     stripePublishableKey,
     stripeConfigured: Boolean(stripePublishableKey),
     pricing: booking.PRICING,
+    setupFee: booking.SETUP_FEE,
     maxBoxes: booking.MAX_BOXES,
     seniorDiscountRate: booking.SENIOR_DISCOUNT_RATE,
     foundingMemberPromoActive: booking.FOUNDING_MEMBER_PROMO_ACTIVE,
