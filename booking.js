@@ -206,7 +206,7 @@
     const extraNote = sel.count > 1 ? ` Additional ${unit}s are ${money(fee.extraBox)} each.` : '';
     if (q.foundingApplied) notes.push(`Founding member offer: first week free, and the ${money(fee.firstBox)} setup fee for your first ${unit} is on us.${extraNote}`);
     else if (q.firstBoxCovered) notes.push(`Your spare box covers the ${money(fee.firstBox)} first-${unit} setup fee.${extraNote}`);
-    notes.push(q.per === 'week' ? 'Billed weekly after each visit.' : 'Billed per visit, after the visit.');
+    notes.push("Billed on the 1st of each month for the previous month's visits.");
     el.quoteNote.textContent = notes.join(' ');
   }
 

@@ -191,7 +191,7 @@ exports.handler = async (event) => {
   if (booking.FOUNDING_MEMBER_PROMO_ACTIVE) fields[FIELDS.foundingMember] = true;
   if (priced.listedSetupFee === 0) fields[FIELDS.setupFeeStatus] = 'N/A';
   else if (priced.setupWaived) fields[FIELDS.setupFeeStatus] = 'Waived';
-  // Otherwise left blank: a fee is still owed (billed after the first visit),
+  // Otherwise left blank: a fee is still owed (goes on the first monthly bill),
   // mark Paid then.
 
   let setupNote;

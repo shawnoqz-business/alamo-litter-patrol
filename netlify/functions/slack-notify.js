@@ -5,7 +5,7 @@
 //   out-of-area-waitlist (service-area.html, email+zip) -> SLACK_WEBHOOK_URL        -> #leads
 //   founding-member      (founding-member.html, mailer) -> MAILER_SLACK_WEBHOOK_URL -> #mailer-responses
 //   booking              (book.html, via create-booking.js, not a Netlify form)
-//                                                       -> BOOKING_SLACK_WEBHOOK_URL if set, else SLACK_WEBHOOK_URL (#leads)
+//                                                       -> BOOKING_SLACK_WEBHOOK_URL (bookings channel; #leads is for promos only)
 //
 // create-booking.js calls notify() directly rather than going through the
 // webhook, so the message-building and posting live in notify() and the
@@ -33,8 +33,7 @@ function buildMessage({ formName, data = {}, human = {} }) {
     if (data.stripeCustomerId) lines.push(`Stripe customer ${data.stripeCustomerId}`);
     if (data.recordId) lines.push(`Airtable record ${data.recordId}`);
     if (failed) lines.push(`Error: ${data.failure || 'unknown'}. Add this customer to Airtable by hand.`);
-    const webhookEnv = process.env.BOOKING_SLACK_WEBHOOK_URL ? 'BOOKING_SLACK_WEBHOOK_URL' : 'SLACK_WEBHOOK_URL';
-    return { text: lines.join('\n'), webhookEnv };
+    return { text: lines.join('\n'), webhookEnv: 'BOOKING_SLACK_WEBHOOK_URL' };
   }
 
   if (isFoundingMember) {

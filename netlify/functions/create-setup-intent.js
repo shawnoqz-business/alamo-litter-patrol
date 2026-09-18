@@ -3,7 +3,7 @@
 //
 // Creates a Stripe Customer and a card-only SetupIntent so the booking form
 // can save a card on file without charging it. Nothing is charged here or
-// anywhere in the booking flow; billing happens after the first visit.
+// anywhere in the booking flow; billing happens monthly for completed visits.
 //
 // Returns { clientSecret, customerId, setupIntentId }.
 
