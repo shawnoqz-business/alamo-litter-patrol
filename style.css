@@ -1073,6 +1073,7 @@ footer {
   padding: 0 2rem 1.75rem;
 }
 .footer-social a {
+  flex: 0 0 40px;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -1089,6 +1090,7 @@ footer {
   width: 36px;
   height: 36px;
   display: block;
+  margin: auto;
 }
 .footer-bottom {
   border-top: 1px solid var(--gray-light);
