@@ -104,8 +104,11 @@ document.querySelectorAll('.ptab').forEach(tab => {
   const PROMO_CTA_TEXT = 'Book Now';
   const PROMO_CTA_LINK = '/book.html';
   const PROMO_EXPIRES = new Date('2027-01-01T00:00:00-06:00');
+  // Founding member offer ended 2026-09-17 (before the 10-customer cap, by Shawn's call).
+  // Set PROMO_ENABLED back to true and edit the copy above when the next promo runs.
+  const PROMO_ENABLED = false;
 
-  if (Date.now() >= PROMO_EXPIRES.getTime()) return;
+  if (!PROMO_ENABLED || Date.now() >= PROMO_EXPIRES.getTime()) return;
 
   let stored = null;
   try {

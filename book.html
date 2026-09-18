@@ -119,6 +119,23 @@
     }
   }
   </script>
+  <!-- Meta Pixel Code — "Alamo Litter Patrol Pixel" (ID 1383918793177818) -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1383918793177818');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1383918793177818&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
 </head>
 <body>
 
@@ -143,17 +160,6 @@
   </header>
 
   <main id="main">
-
-    <!-- ══ PROMO ANNOUNCEMENT ══
-         MANUAL OFF-SWITCH: this offer is capped at our first 10 customers, and the site
-         cannot detect that count on its own. Remove or update this block once customer 10
-         signs. Same reminder lives in index.html and in script.js (promo popup). -->
-    <div class="promo-note-bar promo-note-bar--navy promo-note-bar--amber">
-      <div class="promo-note">
-        <span class="promo-note-tag">Heads up</span>
-        <p>Founding member offer: first week free, no setup fee. Good for our first 10 customers.</p>
-      </div>
-    </div>
 
     <section class="page-header">
       <p class="eyebrow">BOOK NOW</p>
@@ -312,7 +318,10 @@
               <legend><span class="booking-step-num">5</span> Save a card on file</legend>
               <p class="booking-hint">Nothing is charged today. Your card is billed after your first visit, then weekly. Cancel anytime.</p>
               <div id="payment-element" class="booking-payment"></div>
-              <p class="booking-hint booking-secure">Card details go straight to Stripe. We never see or store your card number.</p>
+              <p class="booking-secure">
+                <svg class="booking-lock" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 9V7a5 5 0 0 0-10 0v2H5v13h14V9h-2zm-8-2a3 3 0 0 1 6 0v2H9V7zm3 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg>
+                <span><strong>Secured by <a href="https://stripe.com" target="_blank" rel="noopener">Stripe</a>.</strong> Your card details are encrypted and go straight to Stripe. They never touch our website or our database, and nothing is saved on this page if you leave.</span>
+              </p>
             </fieldset>
 
             <div class="booking-submit-row">

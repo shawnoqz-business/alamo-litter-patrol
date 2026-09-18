@@ -15,7 +15,7 @@ alamo-litter-patrol-v2/
 ├── about.html                  ← Founder + mission + SDVOSB
 ├── faq.html                    ← Full Q&A
 ├── contact.html                ← Contact info + booking link
-├── book.html                   ← Tally form embedded inline
+├── book.html                   ← Native booking form (booking.js + Netlify Functions, Airtable + Stripe)
 ├── privacy.html                ← Privacy placeholder (replace with Termly later)
 ├── terms.html                  ← Terms placeholder (replace with Termly later)
 ├── style.css                   ← Shared stylesheet (every page uses it)
@@ -59,14 +59,14 @@ Visit alamolitterpatrol.com and click through every nav link. Confirm:
 - Mobile hamburger menu works
 - Pricing page tabs switch between Box Swap / Litter-Robot / Scooping
 - FAQ accordion expands/collapses
-- "Book Now" buttons open the Tally form (popup on most pages; inline on /book.html)
+- "Book Now" buttons go to /book.html, the native booking form (live slot picker, Stripe card on file)
 - Mobile sticky CTA bar shows at the bottom of every page on mobile
 
 ---
 
 ## Critical Settings (Don't Change)
 
-- **Tally form ID:** `LZ6aOJ` — this is wired into 30+ buttons/links. Don't change unless replacing the form entirely.
+- **Booking system:** `/book.html` + `booking.js` + `netlify/functions/` (booking-config, check-availability, create-setup-intent, create-booking; shared code in `lib/`). Customers live in Airtable (base id + PAT in Netlify env), cards in Stripe. Prices live in `pricing.html` AND `netlify/functions/lib/booking.js`; change both. Tally is gone.
 - **Email:** `hello@alamolitterpatrol.com` — Namecheap forwards this to Shawn's Gmail.
 - **Color palette:** `#FFFFFF` (white) / `#023047` (deep space blue) / `#FFB703` (amber flame) / `#219EBC` (blue green). ~70/20/7/3 ratio. All colors route through CSS variables in the `:root` block of `style.css` — `--black` (deep blue), `--orange` / `--orange-hover` (amber; variable names kept for compatibility), and `--blue-green` / `--blue-green-hover`. **Contrast rule:** amber is light — any text on an amber background must be dark (`var(--black)`), never white; amber as text only on dark backgrounds. Use `--blue-green` for secondary touches (links, active nav, hover states).
 - **Fonts:** Bebas Neue (display) + DM Sans (body) — loaded from Google Fonts in `style.css`.

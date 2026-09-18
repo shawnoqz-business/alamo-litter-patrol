@@ -53,7 +53,7 @@ const SENIOR_DISCOUNT_RATE = 0.1; // 10% off the service price for 65+
 // can count them. Flip this to false when the offer ends. The matching
 // announcement bar in index.html and book.html, and the promo popup in
 // script.js, must be turned off at the same time.
-const FOUNDING_MEMBER_PROMO_ACTIVE = true;
+const FOUNDING_MEMBER_PROMO_ACTIVE = false; // ended 2026-09-17
 
 // ── Service area ────────────────────────────────────────────────────────────
 // Must match the zip-chip grid on service-area.html.

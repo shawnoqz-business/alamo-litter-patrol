@@ -133,11 +133,14 @@ exports.handler = async (event) => {
   }
 
   // 1. Confirm the card really was saved to this customer (rejects forged ids).
+  let card = null;
   try {
-    const intent = await stripeRequest('GET', `/setup_intents/${data.stripeSetupIntentId}`);
+    const intent = await stripeRequest('GET', `/setup_intents/${data.stripeSetupIntentId}`, { expand: ['payment_method'] });
     if (intent.status !== 'succeeded' || intent.customer !== data.stripeCustomerId) {
       return json(400, { error: 'Your card was not saved. Please re-enter it and try again.' });
     }
+    const pm = intent.payment_method && intent.payment_method.card;
+    if (pm) card = { brand: pm.display_brand || pm.brand || 'Card', last4: pm.last4 };
   } catch (err) {
     console.error('create-booking: Stripe verification failed', err);
     if (err.status === 404) {
@@ -266,6 +269,7 @@ exports.handler = async (event) => {
       setupWaived: priced.setupWaived,
       firstBoxCovered: priced.firstBoxCovered,
       foundingApplied: priced.foundingApplied,
+      card,
       seniorApplied: priced.seniorApplied,
     },
   });

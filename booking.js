@@ -371,6 +371,7 @@
       wallets: { applePay: 'never', googlePay: 'never', link: 'never' },
     });
     payment.mount(el.paymentElement);
+    state.payment = payment;
     state.paymentMounted = true;
   }
 
@@ -490,10 +491,19 @@
       `<strong>Service:</strong> ${rules.label}, ${b.count} ${unit}${b.count > 1 ? (unit === 'box' ? 'es' : 's') : ''}, ${b.accessType.toLowerCase()}`,
       `<strong>Your window:</strong> ${PLURAL_DAYS[b.serviceDay]}, ${b.slotStart} to ${b.slotEnd}`,
       `<strong>Price:</strong> ${money(b.price)}/${b.per}${b.seniorApplied ? ' with senior discount' : ''}, setup fee ${money(b.setupFee)}${b.firstBoxCovered ? ` (first ${unit} covered${b.foundingApplied ? ' by the founding member offer' : ' by your spare box'})` : ''}`,
-      `<strong>Card on file:</strong> saved, nothing charged yet`,
+      `<strong>Card on file:</strong> ${b.card ? `${b.card.brand} ending in ${b.card.last4}` : 'saved'}, nothing charged yet`,
       `<strong>Confirmation to:</strong> ${contact.email}`,
     ];
     el.doneSummary.innerHTML = items.map((i) => `<li>${i}</li>`).join('');
+    // Tear down the card element and clear every field so nothing lingers on the page.
+    try {
+      if (state.payment) state.payment.unmount();
+    } catch (e) {
+      /* already gone */
+    }
+    state.paymentMounted = false;
+    form.reset();
+    if (typeof fbq === 'function') fbq('track', 'Schedule');
     el.doneHeading.textContent = `See you ${DAY_NAMES[b.serviceDay]}, ${contact.name.split(' ')[0]}!`;
     form.hidden = true;
     el.waitlist.hidden = true;
@@ -527,6 +537,12 @@
     updateServiceUI();
     updateZip();
   }
+
+  // If the browser restores this page from its back/forward cache, start over
+  // rather than showing whatever was typed before.
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) window.location.reload();
+  });
 
   init();
 })();

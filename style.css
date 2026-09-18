@@ -1014,13 +1014,6 @@ h2 {
 }
 .contact-info .contact-block a:hover { color: var(--orange); }
 
-.tally-embed {
-  min-height: 600px;
-  border: 1.5px solid var(--gray-light);
-  border-radius: 4px;
-  background: var(--off-white);
-  padding: 1rem;
-}
 
 /* ══════════════════════════════
    FOOTER
@@ -1461,7 +1454,21 @@ footer {
 .booking-time.is-selected { background: var(--orange); border-color: var(--orange); }
 .booking-slot-status { margin-top: 0.9rem; color: var(--black); }
 .booking-payment { margin: 0.5rem 0 0.75rem; min-height: 120px; }
-.booking-secure { margin-bottom: 0; }
+.booking-secure {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--gray-dark);
+  background: var(--color-warm-white);
+  border-radius: 6px;
+  padding: 0.75rem 0.9rem;
+  margin: 0.75rem 0 0;
+}
+.booking-secure strong { color: var(--black); }
+.booking-secure a { color: var(--blue-green); }
+.booking-lock { width: 1.1rem; height: 1.1rem; flex: 0 0 auto; fill: var(--blue-green); margin-top: 0.1rem; }
 .booking-submit-row { text-align: center; }
 .booking-submit { width: 100%; font-size: 1rem; padding: 1.1rem 2rem; }
 .booking-submit:disabled { opacity: 0.6; cursor: wait; transform: none; }
