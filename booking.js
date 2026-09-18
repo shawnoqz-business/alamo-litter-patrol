@@ -358,7 +358,12 @@
         },
       },
     });
-    const payment = state.elements.create('payment', { layout: 'tabs' });
+    // Card only: the SetupIntent is created card-only, so hide Link and the
+    // bank option the element would otherwise offer.
+    const payment = state.elements.create('payment', {
+      layout: 'tabs',
+      wallets: { applePay: 'never', googlePay: 'never', link: 'never' },
+    });
     payment.mount(el.paymentElement);
     state.paymentMounted = true;
   }

@@ -1523,3 +1523,5 @@ footer {
   .booking-days { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .booking-step { padding: 1.4rem 1rem 1rem; }
 }
+.page-header .price-lock-note { font-size: 0.9rem; opacity: 0.8; margin-top: 0.75rem; }
+.booking-price-lock { margin-top: 0.6rem; margin-bottom: 0; text-align: left; }
