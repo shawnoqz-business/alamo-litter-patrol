@@ -177,7 +177,7 @@
     } else {
       porchInput.disabled = false;
       el.porchOption.classList.remove('is-disabled');
-      el.accessHint.textContent = 'Porch swap: leave the box outside and knock $15 off every visit.';
+      el.accessHint.textContent = 'Porch swap: leave the box outside and knock $5 off every visit.';
     }
 
     // Access notes only matter when we come inside.
@@ -220,7 +220,7 @@
       el.quoteSetup.innerHTML = `${label} (${parts.join(', ')}; ${money(boxPrice)} per box we supply)`;
     }
     const notes = [];
-    if (q.seniorApplied) notes.push(`Senior discount applied (was ${money(q.basePrice)}).`);
+    if (q.seniorApplied) notes.push(`Senior discount applied (was ${money(q.basePrice)}). This is an estimate. Your full 10% senior discount comes off your entire monthly bill, boxes included.`);
     if (q.foundingApplied) notes.push(`Founding member offer: first week free, and one ${money(boxPrice)} box is on us.`);
     notes.push("Billed on the 1st of each month for the previous month's visits.");
     el.quoteNote.textContent = notes.join(' ');
