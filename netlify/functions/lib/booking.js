@@ -29,14 +29,6 @@ const PRICING = {
     hasSetupFee: false,
     porchAllowed: false,
   },
-  'Dump+Refill': {
-    label: 'Dump + Refill',
-    per: 'visit',
-    homeEntry: [30, 40, 50],
-    porch: null,
-    hasSetupFee: false,
-    porchAllowed: false,
-  },
 };
 
 // One-time setup fee: $50 covers the first stainless steel box (or loaner),
@@ -67,12 +59,13 @@ function isServiceZip(zip) {
 
 // Prices a selection. All amounts are whole dollars.
 //   price            what they pay per week/visit (after senior discount)
-//   listedSetupFee   the published setup fee for this box count
-//   setupFee         what they actually owe after any first-box coverage
-//   firstBoxCovered  true when the $50 first-box portion is waived (spare box
-//                    or founding member offer); additional boxes still cost
-//                    SETUP_FEE.extraBox each
-function quote({ serviceType, count, accessType, seniorDiscount, hasSpareBox }) {
+//   listedSetupFee   the published setup fee if we supplied every box
+//   suppliedBoxes    boxes we provide (count minus the customer's own boxes)
+//   setupFee         fee for the boxes we supply: $50 for the first, $25 each
+//                    additional, $0 when the customer supplies all of them.
+//                    The founding member offer (when on) covers the first
+//                    supplied box.
+function quote({ serviceType, count, accessType, seniorDiscount, ownBoxes }) {
   const rules = PRICING[serviceType];
   if (!rules) return { error: 'Unknown service type' };
   const n = Number(count);
@@ -88,10 +81,12 @@ function quote({ serviceType, count, accessType, seniorDiscount, hasSpareBox }) 
   const seniorApplied = Boolean(seniorDiscount);
   const price = seniorApplied ? Math.round(base * (1 - SENIOR_DISCOUNT_RATE)) : base;
 
-  const listedSetupFee = rules.hasSetupFee ? SETUP_FEE.firstBox + SETUP_FEE.extraBox * (n - 1) : 0;
-  const foundingApplied = FOUNDING_MEMBER_PROMO_ACTIVE && rules.hasSetupFee;
-  const firstBoxCovered = rules.hasSetupFee && (Boolean(hasSpareBox) || foundingApplied);
-  const setupFee = firstBoxCovered ? SETUP_FEE.extraBox * (n - 1) : listedSetupFee;
+  const own = Math.min(Math.max(0, Math.floor(Number(ownBoxes) || 0)), n);
+  const supplied = rules.hasSetupFee ? n - own : 0;
+  const feeFor = (boxes) => (boxes > 0 ? SETUP_FEE.firstBox + SETUP_FEE.extraBox * (boxes - 1) : 0);
+  const listedSetupFee = rules.hasSetupFee ? feeFor(n) : 0;
+  const foundingApplied = FOUNDING_MEMBER_PROMO_ACTIVE && supplied > 0;
+  const setupFee = foundingApplied ? SETUP_FEE.extraBox * (supplied - 1) : feeFor(supplied);
 
   return {
     service: rules.label,
@@ -100,11 +95,11 @@ function quote({ serviceType, count, accessType, seniorDiscount, hasSpareBox }) 
     price,
     listedSetupFee,
     setupFee,
-    firstBoxCovered,
-    setupWaived: firstBoxCovered && setupFee === 0,
+    ownBoxes: rules.hasSetupFee ? own : 0,
+    suppliedBoxes: supplied,
+    setupWaived: rules.hasSetupFee && setupFee === 0,
     seniorApplied,
     foundingApplied,
-    hasSpareBox: Boolean(hasSpareBox),
   };
 }
 

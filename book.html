@@ -175,7 +175,7 @@
           <p>Let us know in the notes field below, and include your preferred brand if you have one. Litter delivery is available as an add-on to any active service.</p>
         </div>
 
-        <p class="addon-note" style="margin-bottom:2rem;">Setup fee from $50, waived if you own a spare box. <a href="/pricing.html">See pricing details →</a></p>
+        <p class="addon-note" style="margin-bottom:2rem;">Setup fee from $50 per box we supply. Use your own litter boxes and there is no setup fee on those. <a href="/pricing.html">See pricing details →</a></p>
 
         <form id="booking-form" class="booking-form" novalidate>
           <p class="waitlist-honeypot" aria-hidden="true">
@@ -207,13 +207,6 @@
                   <span class="booking-choice-sub">Per visit. We come in and scoop. No box swap. Home entry only.</span>
                 </span>
               </label>
-              <label class="booking-choice">
-                <input type="radio" name="serviceType" value="Dump+Refill" />
-                <span class="booking-choice-body">
-                  <span class="booking-choice-title">Dump + Refill</span>
-                  <span class="booking-choice-sub">Per visit. Full dump, fresh litter. Home entry only.</span>
-                </span>
-              </label>
             </div>
 
             <div class="booking-row">
@@ -236,8 +229,20 @@
               </div>
             </div>
 
+            <div class="booking-row" id="own-boxes-row">
+              <div class="booking-field">
+                <label for="ownBoxes" id="own-boxes-label">Using your own litter boxes? How many should we use?</label>
+                <select id="ownBoxes" name="ownBoxes">
+                  <option value="0">None, supply them (setup fee applies)</option>
+                  <option value="1">1 of my own</option>
+                  <option value="2">2 of my own</option>
+                  <option value="3">3 of my own</option>
+                </select>
+                <p class="booking-hint" id="own-boxes-hint">No setup fee on any box you supply.</p>
+              </div>
+            </div>
+
             <div class="booking-checks">
-              <label><input type="checkbox" name="hasSpareBox" /> I already own a spare box (waives the setup fee)</label>
               <label><input type="checkbox" name="seniorDiscount" /> I'm 65 or older (10% senior discount)</label>
             </div>
 
@@ -316,7 +321,7 @@
             <!-- Step 5: card -->
             <fieldset class="booking-step" id="step-card">
               <legend><span class="booking-step-num">5</span> Save a card on file</legend>
-              <p class="booking-hint">Nothing is charged today. On the 1st of each month we charge your card for the previous month's visits, all at once. Cancel anytime.</p>
+              <p class="booking-hint">Nothing is charged today. On the 1st of each month we charge your card for the previous month's visits. Cancel anytime.</p>
               <div id="payment-element" class="booking-payment"></div>
               <p class="booking-secure">
                 <svg class="booking-lock" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 9V7a5 5 0 0 0-10 0v2H5v13h14V9h-2zm-8-2a3 3 0 0 1 6 0v2H9V7zm3 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg>
@@ -360,9 +365,14 @@
           <ul class="booking-next">
             <li><strong>Within 24-48 hours:</strong> We email or text to say hello and confirm your first service date.</li>
             <li><strong>Day before service:</strong> Reminder text with option to reply SKIP.</li>
-            <li><strong>Service day:</strong> We arrive within your window, do the job, send a photo.</li>
-            <li><strong>Billing:</strong> On the 1st of each month we charge your card for the previous month's visits, all at once. Cancel anytime.</li>
+            <li><strong>Service day:</strong> We arrive within your window, do the job, and text you a photo when we're done, whether you're home or not.</li>
+            <li><strong>Billing:</strong> On the 1st of each month we charge your card for the previous month's visits.</li>
           </ul>
+          <div class="booking-calendar">
+            <a id="cal-google" class="btn btn-ghost" target="_blank" rel="noopener">Add to Google Calendar</a>
+            <a id="cal-ics" class="btn btn-ghost" download="alamo-litter-patrol.ics">Apple / Outlook calendar (.ics)</a>
+          </div>
+          <p class="booking-fine">The calendar entry repeats weekly starting <span id="cal-first"></span>. We'll text to confirm your first visit date, so adjust it if we agree on a different week.</p>
           <p class="booking-fine">Need to change anything? Email <a href="mailto:hello@alamolitterpatrol.com">hello@alamolitterpatrol.com</a>.</p>
         </section>
 
@@ -385,7 +395,7 @@
             <li><strong>Within 24-48 hours:</strong> We email or text confirming your first service day.</li>
             <li><strong>Day before service:</strong> Reminder text with option to reply SKIP.</li>
             <li><strong>Service day:</strong> We arrive within your time window, do the swap, send a photo.</li>
-            <li><strong>Billing:</strong> On the 1st of each month we charge your card for the previous month's visits, all at once. Cancel anytime.</li>
+            <li><strong>Billing:</strong> On the 1st of each month we charge your card for the previous month's visits.</li>
           </ul>
         </div>
       </div>

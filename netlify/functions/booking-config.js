@@ -18,6 +18,7 @@ exports.handler = async (event) => {
   const body = {
     stripePublishableKey,
     stripeConfigured: Boolean(stripePublishableKey),
+    slackBookingConfigured: Boolean(process.env.BOOKING_SLACK_WEBHOOK_URL),
     pricing: booking.PRICING,
     setupFee: booking.SETUP_FEE,
     maxBoxes: booking.MAX_BOXES,

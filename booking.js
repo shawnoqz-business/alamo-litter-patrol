@@ -130,7 +130,7 @@
       count: Number(el.count.value),
       accessType: radioValue('accessType'),
       seniorDiscount: field('seniorDiscount').checked,
-      hasSpareBox: field('hasSpareBox').checked,
+      ownBoxes: Number(field('ownBoxes').value) || 0,
     };
   }
 
@@ -143,17 +143,19 @@
     if (porch && !rules.porchAllowed) return { error: 'home-only' };
     const base = (porch ? rules.porch : rules.homeEntry)[sel.count - 1];
     const price = sel.seniorDiscount ? Math.round(base * (1 - cfg.seniorDiscountRate)) : base;
-    const extras = cfg.setupFee.extraBox * (sel.count - 1);
-    const listedSetupFee = rules.hasSetupFee ? cfg.setupFee.firstBox + extras : 0;
-    const foundingApplied = cfg.foundingMemberPromoActive && rules.hasSetupFee;
-    const firstBoxCovered = rules.hasSetupFee && (sel.hasSpareBox || foundingApplied);
+    const own = rules.hasSetupFee ? Math.min(Math.max(0, sel.ownBoxes), sel.count) : 0;
+    const supplied = rules.hasSetupFee ? sel.count - own : 0;
+    const feeFor = (boxes) => (boxes > 0 ? cfg.setupFee.firstBox + cfg.setupFee.extraBox * (boxes - 1) : 0);
+    const listedSetupFee = rules.hasSetupFee ? feeFor(sel.count) : 0;
+    const foundingApplied = cfg.foundingMemberPromoActive && supplied > 0;
     return {
       per: rules.per,
       price,
       basePrice: base,
       listedSetupFee,
-      setupFee: firstBoxCovered ? extras : listedSetupFee,
-      firstBoxCovered,
+      setupFee: foundingApplied ? cfg.setupFee.extraBox * (supplied - 1) : feeFor(supplied),
+      ownBoxes: own,
+      suppliedBoxes: supplied,
       foundingApplied,
       seniorApplied: sel.seniorDiscount,
     };
@@ -179,6 +181,18 @@
     // Access notes only matter when we come inside.
     el.accessNotesField.hidden = radioValue('accessType') !== 'Home Entry';
 
+    // Own-box choice: only for services with a setup fee, never more than the box count.
+    const ownRow = document.getElementById('own-boxes-row');
+    const ownSelect = field('ownBoxes');
+    ownRow.hidden = !rules.hasSetupFee || sel.count > state.config.maxBoxes;
+    Array.from(ownSelect.options).forEach((opt) => {
+      opt.hidden = Number(opt.value) > sel.count;
+    });
+    if (Number(ownSelect.value) > sel.count) ownSelect.value = String(sel.count);
+    document.getElementById('own-boxes-label').textContent = sel.serviceType === 'Litter-Robot'
+      ? 'Have your own spare box for us to leave as the loaner? How many?'
+      : 'Using your own litter boxes? How many should we use?';
+
     const q = quote(currentSelection());
     if (q.error === 'custom-quote') {
       el.quote.hidden = true;
@@ -192,9 +206,12 @@
     el.quotePer.textContent = `/${q.per}`;
     const fee = state.config.setupFee;
     const unit = sel.serviceType === 'Litter-Robot' ? 'unit' : 'box';
+    const boxWord = (n) => (n === 1 ? 'box' : 'boxes');
     if (q.listedSetupFee === 0) {
       el.quoteSetup.textContent = 'No setup fee.';
-    } else if (q.firstBoxCovered) {
+    } else if (q.ownBoxes > 0 && q.setupFee < q.listedSetupFee) {
+      el.quoteSetup.innerHTML = `One-time setup fee: <s>${money(q.listedSetupFee)}</s> ${money(q.setupFee)} (you supply ${q.ownBoxes} ${boxWord(q.ownBoxes)}, we supply ${q.suppliedBoxes})`;
+    } else if (q.foundingApplied) {
       el.quoteSetup.innerHTML = `One-time setup fee: <s>${money(q.listedSetupFee)}</s> ${money(q.setupFee)}`;
     } else if (sel.count > 1) {
       el.quoteSetup.textContent = `One-time setup fee: ${money(q.listedSetupFee)} (${money(fee.firstBox)} first ${unit} + ${money(fee.extraBox)} each additional)`;
@@ -203,9 +220,8 @@
     }
     const notes = [];
     if (q.seniorApplied) notes.push(`Senior discount applied (was ${money(q.basePrice)}).`);
-    const extraNote = sel.count > 1 ? ` Additional ${unit}s are ${money(fee.extraBox)} each.` : '';
-    if (q.foundingApplied) notes.push(`Founding member offer: first week free, and the ${money(fee.firstBox)} setup fee for your first ${unit} is on us.${extraNote}`);
-    else if (q.firstBoxCovered) notes.push(`Your spare box covers the ${money(fee.firstBox)} first-${unit} setup fee.${extraNote}`);
+    if (q.foundingApplied) notes.push(`Founding member offer: first week free, and the ${money(fee.firstBox)} setup fee for your first ${unit} is on us.`);
+    if (q.ownBoxes > 0) notes.push(q.suppliedBoxes === 0 ? 'No setup fee: you are supplying every box.' : 'No setup fee on the boxes you supply.');
     notes.push("Billed on the 1st of each month for the previous month's visits.");
     el.quoteNote.textContent = notes.join(' ');
   }
@@ -447,7 +463,7 @@
         count: sel.count,
         accessType: sel.accessType,
         seniorDiscount: sel.seniorDiscount,
-        hasSpareBox: sel.hasSpareBox,
+        ownBoxes: sel.ownBoxes,
         serviceDay: el.serviceDay.value,
         slotStart: el.slotStart.value,
         name: contact.name,
@@ -490,11 +506,12 @@
     const items = [
       `<strong>Service:</strong> ${rules.label}, ${b.count} ${unit}${b.count > 1 ? (unit === 'box' ? 'es' : 's') : ''}, ${b.accessType.toLowerCase()}`,
       `<strong>Your window:</strong> ${PLURAL_DAYS[b.serviceDay]}, ${b.slotStart} to ${b.slotEnd}`,
-      `<strong>Price:</strong> ${money(b.price)}/${b.per}${b.seniorApplied ? ' with senior discount' : ''}, setup fee ${money(b.setupFee)}${b.firstBoxCovered ? ` (first ${unit} covered${b.foundingApplied ? ' by the founding member offer' : ' by your spare box'})` : ''}`,
+      `<strong>Price:</strong> ${money(b.price)}/${b.per}${b.seniorApplied ? ' with senior discount' : ''}, setup fee ${money(b.setupFee)}${b.ownBoxes > 0 ? ` (you supply ${b.ownBoxes} of ${b.count} boxes)` : ''}${b.foundingApplied ? ' (founding member offer)' : ''}`,
       `<strong>Card on file:</strong> ${b.card ? `${b.card.brand} ending in ${b.card.last4}` : 'saved'}, nothing charged yet`,
       `<strong>Confirmation to:</strong> ${contact.email}`,
     ];
     el.doneSummary.innerHTML = items.map((i) => `<li>${i}</li>`).join('');
+    buildCalendarLinks(b, rules.label);
     // Tear down the card element and clear every field so nothing lingers on the page.
     try {
       if (state.payment) state.payment.unmount();
@@ -512,6 +529,58 @@
     el.done.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  // ── Calendar links (weekly recurring event, local time) ──────────────────
+  function pad(n) {
+    return String(n).padStart(2, '0');
+  }
+  function calendarStamp(date, minutes) {
+    return `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}T${pad(Math.floor(minutes / 60))}${pad(minutes % 60)}00`;
+  }
+  function buildCalendarLinks(b, serviceLabel) {
+    const dayIndex = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 }[b.serviceDay];
+    const first = new Date();
+    first.setHours(0, 0, 0, 0);
+    first.setDate(first.getDate() + 1);
+    while (first.getDay() !== dayIndex) first.setDate(first.getDate() + 1);
+    const startMin = parseTime(b.slotStart);
+    const endMin = parseTime(b.slotEnd);
+    const title = `Alamo Litter Patrol: ${serviceLabel}`;
+    const details = `Weekly ${serviceLabel.toLowerCase()} visit. Target window ${b.slotStart} to ${b.slotEnd}; exact timing may shift slightly with the day's route. Questions: hello@alamolitterpatrol.com`;
+    const byDay = b.serviceDay.slice(0, 2).toUpperCase();
+    const start = calendarStamp(first, startMin);
+    const end = calendarStamp(first, endMin);
+
+    const google = new URL('https://calendar.google.com/calendar/render');
+    google.searchParams.set('action', 'TEMPLATE');
+    google.searchParams.set('text', title);
+    google.searchParams.set('dates', `${start}/${end}`);
+    google.searchParams.set('details', details);
+    google.searchParams.set('recur', `RRULE:FREQ=WEEKLY;BYDAY=${byDay}`);
+    google.searchParams.set('ctz', 'America/Chicago');
+    document.getElementById('cal-google').href = google.toString();
+
+    const ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Alamo Litter Patrol//Booking//EN',
+      'BEGIN:VEVENT',
+      `UID:${Date.now()}@alamolitterpatrol.com`,
+      `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z')}`,
+      `DTSTART:${start}`,
+      `DTEND:${end}`,
+      `RRULE:FREQ=WEEKLY;BYDAY=${byDay}`,
+      `SUMMARY:${title}`,
+      `DESCRIPTION:${details.replace(/,/g, '\\,')}`,
+      'END:VEVENT',
+      'END:VCALENDAR',
+    ].join('\r\n');
+    const icsLink = document.getElementById('cal-ics');
+    if (icsLink.href && icsLink.href.startsWith('blob:')) URL.revokeObjectURL(icsLink.href);
+    icsLink.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' }));
+
+    document.getElementById('cal-first').textContent = first.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  }
+
   // ── Wire up ───────────────────────────────────────────────────────────────
   async function init() {
     try {
@@ -522,7 +591,8 @@
       return;
     }
 
-    form.querySelectorAll('input[name="serviceType"], input[name="accessType"], input[name="seniorDiscount"], input[name="hasSpareBox"]').forEach((input) => {
+    field('ownBoxes').addEventListener('change', updateServiceUI);
+    form.querySelectorAll('input[name="serviceType"], input[name="accessType"], input[name="seniorDiscount"]').forEach((input) => {
       input.addEventListener('change', () => {
         updateServiceUI();
         if (input.name === 'serviceType') scheduleAvailability();

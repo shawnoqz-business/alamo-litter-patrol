@@ -1524,6 +1524,8 @@ footer {
 .booking-next li:last-child { border-bottom: none; }
 .booking-summary strong,
 .booking-next strong { color: var(--black); }
+.booking-calendar { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
+.booking-calendar .btn { font-size: 0.8rem; padding: 0.7rem 1.1rem; }
 @media (max-width: 600px) {
   .booking-choices,
   .booking-row { grid-template-columns: 1fr; }

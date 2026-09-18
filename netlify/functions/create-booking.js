@@ -9,7 +9,7 @@
 //
 // Body:
 // {
-//   serviceType, count, accessType, seniorDiscount, hasSpareBox,
+//   serviceType, count, accessType, seniorDiscount, ownBoxes,
 //   serviceDay, slotStart,
 //   name, email, phone, address, zip, accessNotes, notes,
 //   stripeCustomerId, stripeSetupIntentId,
@@ -88,7 +88,7 @@ function validate(input) {
       count,
       accessType,
       seniorDiscount: Boolean(input.seniorDiscount),
-      hasSpareBox: Boolean(input.hasSpareBox),
+      ownBoxes: Math.min(Math.max(0, Math.floor(Number(input.ownBoxes) || 0)), 10),
       serviceDay,
       slotStart,
       startMinutes,
@@ -196,10 +196,11 @@ exports.handler = async (event) => {
 
   let setupNote;
   if (priced.listedSetupFee === 0) setupNote = 'no setup fee';
-  else if (priced.firstBoxCovered) {
-    const why = data.hasSpareBox ? 'own spare box' : 'founding member offer';
-    setupNote = `setup fee $${priced.setupFee} (first box covered by ${why}, listed $${priced.listedSetupFee})`;
-  } else setupNote = `setup fee $${priced.setupFee}`;
+  else {
+    setupNote = `setup fee $${priced.setupFee}`;
+    if (priced.ownBoxes > 0) setupNote += ` (customer supplies ${priced.ownBoxes} of ${data.count} boxes, we supply ${priced.suppliedBoxes})`;
+    if (priced.foundingApplied) setupNote += ' (first supplied box covered by founding member offer)';
+  }
 
   const notesParts = [];
   if (data.notes) notesParts.push(data.notes);
@@ -267,7 +268,8 @@ exports.handler = async (event) => {
       setupFee: priced.setupFee,
       listedSetupFee: priced.listedSetupFee,
       setupWaived: priced.setupWaived,
-      firstBoxCovered: priced.firstBoxCovered,
+      ownBoxes: priced.ownBoxes,
+      suppliedBoxes: priced.suppliedBoxes,
       foundingApplied: priced.foundingApplied,
       card,
       seniorApplied: priced.seniorApplied,

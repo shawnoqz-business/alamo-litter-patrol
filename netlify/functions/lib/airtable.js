@@ -21,7 +21,7 @@ const FIELDS = Object.freeze({
   phone: 'Phone',
   address: 'Address',
   accessNotes: 'Gate Code / Access Notes',
-  serviceType: 'Service Type', // Box Swap | Litter-Robot | Scoop-Only | Dump+Refill
+  serviceType: 'Service Type', // Box Swap | Litter-Robot | Scoop-Only (Dump+Refill retired 2026-09-17)
   boxCount: 'Box/Unit Count',
   accessType: 'Access Type', // Home Entry | Porch
   serviceDay: 'Service Day', // Mon | Tue | Wed | Thu | Fri | Sat

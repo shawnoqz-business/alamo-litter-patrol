@@ -40,7 +40,8 @@ const HOURS = {
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-const SERVICE_TYPES = ['Box Swap', 'Litter-Robot', 'Scoop-Only', 'Dump+Refill'];
+// Dump+Refill was retired 2026-09-17; the Airtable option remains for old records.
+const SERVICE_TYPES = ['Box Swap', 'Litter-Robot', 'Scoop-Only'];
 // ────────────────────────────────────────────────────────────────────────────
 
 // Minutes a visit takes for a given service and box/unit count.
