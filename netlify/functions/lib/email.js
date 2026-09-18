@@ -2,7 +2,9 @@
 //
 // Env:
 //   RESEND_API_KEY        required to send; when missing, sending is skipped
-//                         (logged) and the booking still succeeds.
+//                         (logged) and the booking still succeeds. Shawn's
+//                         Netlify name for it, NETLIFY_BOOKING_CONFIRMS_RESEND_API_KEY,
+//                         is accepted too.
 //   BOOKING_FROM_EMAIL    optional, default "Alamo Litter Patrol <hello@alamolitterpatrol.com>"
 //                         (the domain must be verified in Resend)
 //   BOOKING_NOTIFY_EMAIL  optional, default hello@alamolitterpatrol.com, gets a copy
@@ -84,9 +86,9 @@ function bookingEmail({ booking: b, contact, serviceLabel, calendar, boxNote }) 
 
 // Sends through Resend. Resolves { sent: true, id } or { sent: false, reason }.
 async function sendEmail({ to, subject, html, text, attachments = [], bcc }) {
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = process.env.RESEND_API_KEY || process.env.NETLIFY_BOOKING_CONFIRMS_RESEND_API_KEY;
   if (!apiKey) {
-    console.warn('email: RESEND_API_KEY is not set; skipping confirmation email');
+    console.warn('email: RESEND_API_KEY (or NETLIFY_BOOKING_CONFIRMS_RESEND_API_KEY) is not set; skipping confirmation email');
     return { sent: false, reason: 'not-configured' };
   }
   const payload = {
