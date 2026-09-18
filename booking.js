@@ -549,7 +549,7 @@
     const startMin = parseTime(b.slotStart);
     const endMin = parseTime(b.slotEnd);
     const title = `Alamo Litter Patrol: ${serviceLabel}`;
-    const details = `Weekly ${serviceLabel.toLowerCase()} visit. Target window ${b.slotStart} to ${b.slotEnd}; exact timing may shift slightly with the day's route. Questions: hello@alamolitterpatrol.com`;
+    const details = `Weekly ${serviceLabel.replace(/^Weekly\s+/i, '').toLowerCase()} visit. Target window ${b.slotStart} to ${b.slotEnd}; exact timing may shift slightly with the day's route. Questions: hello@alamolitterpatrol.com`;
     const byDay = b.serviceDay.slice(0, 2).toUpperCase();
     const start = calendarStamp(first, startMin);
     const end = calendarStamp(first, endMin);

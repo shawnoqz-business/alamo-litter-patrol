@@ -60,7 +60,7 @@ function weeklyWindow({ serviceLabel, serviceDay, slotStart, slotEnd, uid }) {
   const end = stamp(first, parseTime(slotEnd));
   const byDay = serviceDay.slice(0, 2).toUpperCase();
   const title = `Alamo Litter Patrol: ${serviceLabel}`;
-  const details = `Weekly ${serviceLabel.toLowerCase()} visit. Target window ${slotStart} to ${slotEnd}; exact timing may shift slightly with the day's route. Questions: hello@alamolitterpatrol.com`;
+  const details = `Weekly ${serviceLabel.replace(/^Weekly\s+/i, '').toLowerCase()} visit. Target window ${slotStart} to ${slotEnd}; exact timing may shift slightly with the day's route. Questions: hello@alamolitterpatrol.com`;
 
   const google = new URL('https://calendar.google.com/calendar/render');
   google.searchParams.set('action', 'TEMPLATE');
