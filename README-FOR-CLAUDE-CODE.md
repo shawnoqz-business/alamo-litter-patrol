@@ -15,15 +15,17 @@ alamo-litter-patrol-v2/
 ├── about.html                  ← Founder + mission + SDVOSB
 ├── faq.html                    ← Full Q&A
 ├── contact.html                ← Contact info + booking link
-├── book.html                   ← Tally form embedded inline
+├── book.html                   ← Native booking form (booking.js + Netlify Functions, Airtable + Stripe)
+├── founding-member.html        ← noindex mailer-QR landing page (deliberately not in sitemap)
 ├── privacy.html                ← Privacy placeholder (replace with Termly later)
 ├── terms.html                  ← Terms placeholder (replace with Termly later)
 ├── style.css                   ← Shared stylesheet (every page uses it)
-├── script.js                   ← Shared JS (nav, FAQ, pricing tabs)
+├── script.js                   ← Shared JS (nav, FAQ, pricing tabs, promo popup, form handlers)
 ├── robots.txt                  ← SEO
 ├── sitemap.xml                 ← SEO
 ├── README-FOR-CLAUDE-CODE.md   ← This file
-└── assets/                     ← Drop bug-hero.jpg here (and any future images)
+├── netlify/functions/          ← booking functions (booking-config, check-availability, create-setup-intent, create-booking, shared lib/) + slack-notify.js + sheets-relay.js relays
+└── assets/                     ← logo, favicons, hero (bug-hero-glow.jpg/.webp), about photo, og-card
 ```
 
 ---
@@ -59,14 +61,14 @@ Visit alamolitterpatrol.com and click through every nav link. Confirm:
 - Mobile hamburger menu works
 - Pricing page tabs switch between Box Swap / Litter-Robot / Scooping
 - FAQ accordion expands/collapses
-- "Book Now" buttons open the Tally form (popup on most pages; inline on /book.html)
+- "Book Now" buttons go to /book.html, the native booking form (live slot picker, Stripe card on file)
 - Mobile sticky CTA bar shows at the bottom of every page on mobile
 
 ---
 
 ## Critical Settings (Don't Change)
 
-- **Tally form ID:** `LZ6aOJ` — this is wired into 30+ buttons/links. Don't change unless replacing the form entirely.
+- **Booking system:** `/book.html` + `booking.js` + `netlify/functions/` (booking-config, check-availability, create-setup-intent, create-booking; shared code in `lib/`). Customers live in Airtable (base id + PAT in Netlify env), cards in Stripe. Prices live in `pricing.html` (and the cards on `index.html`, and the FAQ) AND `netlify/functions/lib/booking.js`; change all of them. Confirmation email goes through Resend (`lib/email.js`; env `NETLIFY_BOOKING_CONFIRMS_RESEND_API_KEY`, or `RESEND_API_KEY`; sender defaults to hello@bookings.alamolitterpatrol.com, the domain verified in Resend). Tally is gone.
 - **Email:** `hello@alamolitterpatrol.com` — Namecheap forwards this to Shawn's Gmail.
 - **Color palette:** `#FFFFFF` (white) / `#023047` (deep space blue) / `#FFB703` (amber flame) / `#219EBC` (blue green). ~70/20/7/3 ratio. All colors route through CSS variables in the `:root` block of `style.css` — `--black` (deep blue), `--orange` / `--orange-hover` (amber; variable names kept for compatibility), and `--blue-green` / `--blue-green-hover`. **Contrast rule:** amber is light — any text on an amber background must be dark (`var(--black)`), never white; amber as text only on dark backgrounds. Use `--blue-green` for secondary touches (links, active nav, hover states).
 - **Fonts:** Bebas Neue (display) + DM Sans (body) — loaded from Google Fonts in `style.css`.
@@ -93,11 +95,19 @@ Visit alamolitterpatrol.com and click through every nav link. Confirm:
 
 ## Known Placeholders To Replace Later
 
-1. **assets/bug-hero.jpg** — must be added before deploy
-2. **ZIP codes on service-area.html** — currently a reasonable best guess for Leon Valley / Helotes / NW SA / Medical Center / UTSA. Shawn should verify and trim/add as needed.
-3. **privacy.html and terms.html** — usable placeholders, but generate proper versions on termly.io (~10 min, free) before formal LLC launch.
-4. **About page photo** — currently reuses bug-hero.jpg. Consider a second photo (Shawn + Bug, or sanitization station).
-5. **Phone number** — not currently displayed anywhere. Add once Google Voice or OpenPhone is set up. Add to contact.html and the mobile CTA bar.
+1. **privacy.html and terms.html** — usable, hand-edited (the Cookies & Advertising section discloses the Meta Pixel), but generate proper versions on termly.io (~10 min, free) before formal LLC launch.
+
+---
+
+## Resolved Since The V2 Build
+
+Kept here so these don't get re-opened by a future pass:
+
+- **Hero image** — `bug-hero.jpg` no longer exists. The hero is `assets/bug-hero-glow.jpg`, served via `<picture>` with a WebP first (`bug-hero-glow.webp`). It's the LCP image and keeps `fetchpriority="high"`.
+- **ZIP codes** — no longer a guess. Confirmed 2026-08-23 and extended 2026-09-17; the service zone is 9 ZIPs: 78238 Leon Valley, 78240 / 78250 / 78230 NW San Antonio, 78229 Medical Center, 78249 UTSA area, 78231 Shavano Park area, 78023 Helotes, 78253 Alamo Ranch. They live in exactly two places — the `zip-chip` grid on `service-area.html` and the `areaServed` block of the `LocalBusiness` JSON-LD on all 10 indexable pages. Changing the zone means editing both.
+- **About page photo** — `assets/about-photo.jpg` is in place; it no longer reuses the hero.
+- **Phone number** — (210) 920-0654 is live. **Shawn's call: contact page only.** It appears as a visible `tel:` link on `contact.html` and in the JSON-LD on all 10 indexable pages. Deliberately NOT in the footer, nav, or the mobile CTA bar — don't "finish the job" by adding it there.
+- **Schema.org LocalBusiness markup** — shipped. Present on all 10 indexable pages, anchored at `@id: https://alamolitterpatrol.com/#business`. `faq.html` also carries `FAQPage`; `pricing.html` also carries an `OfferCatalog` using price ranges. `founding-member.html` is excluded on purpose (noindex).
 
 ---
 
@@ -109,4 +119,3 @@ Visit alamolitterpatrol.com and click through every nav link. Confirm:
 - SDVOSB certification logo (once SBA VetCert approved)
 - Real operation photos (replacing stock-ish elements)
 - Google Business Profile embed on contact page
-- Schema.org LocalBusiness markup (after Google Business Profile is claimed)
