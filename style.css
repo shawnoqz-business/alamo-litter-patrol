@@ -1067,6 +1067,19 @@ footer {
   color: var(--gray-mid);
   text-align: right;
 }
+.footer-social {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 0 2rem 1.5rem;
+}
+.footer-social a {
+  font-size: 0.85rem;
+  color: var(--gray-mid);
+  transition: color var(--t-fast);
+}
+.footer-social a:hover { color: var(--black); }
 .footer-bottom {
   border-top: 1px solid var(--gray-light);
   text-align: center;
