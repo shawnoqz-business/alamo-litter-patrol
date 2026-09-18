@@ -1048,10 +1048,6 @@ footer {
   width: auto;
   display: block;
 }
-.footer-city {
-  font-size: 0.8rem;
-  color: var(--gray-mid);
-}
 .footer-nav {
   display: flex;
   flex-wrap: wrap;
