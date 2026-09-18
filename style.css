@@ -1069,29 +1069,25 @@ footer {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.9rem;
+  gap: 1.25rem;
   padding: 0 2rem 1.75rem;
 }
 .footer-social a {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: var(--black);
-  color: var(--white);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background var(--t-fast), transform var(--t-fast);
+  transition: transform var(--t-fast), opacity var(--t-fast);
 }
 .footer-social a:hover {
-  background: var(--orange);
-  color: var(--black);
   transform: translateY(-2px);
+  opacity: 0.85;
 }
 .footer-social svg {
-  width: 22px;
-  height: 22px;
-  fill: currentColor;
+  width: 36px;
+  height: 36px;
   display: block;
 }
 .footer-bottom {
