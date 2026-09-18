@@ -205,7 +205,7 @@ exports.handler = async (event) => {
     const parts = [];
     if (priced.suppliedBoxes > 0) parts.push(`we supply ${priced.suppliedBoxes} for the rotation`);
     if (priced.ownBoxes > 0) parts.push(`customer supplies ${priced.ownBoxes}`);
-    if (priced.extraBoxes > 0) parts.push(`${priced.extraBoxes} extra to keep`);
+    if (priced.extraBoxes > 0) parts.push(`${priced.extraBoxes} additional box${priced.extraBoxes === 1 ? '' : 'es'} purchased`);
     if (priced.foundingApplied) parts.push('one box covered by founding member offer');
     boxNote = parts.join(', ');
     setupNote = `boxes $${priced.setupFee} one-time (${boxNote}; $${priced.boxPrice} per box we supply)`;

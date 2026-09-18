@@ -215,7 +215,7 @@
       const parts = [];
       if (q.suppliedBoxes > 0) parts.push(`we supply ${q.suppliedBoxes} ${unit === 'box' ? boxWord(q.suppliedBoxes) : `loaner ${boxWord(q.suppliedBoxes)}`}`);
       if (q.ownBoxes > 0) parts.push(`you supply ${q.ownBoxes}`);
-      if (q.extraBoxes > 0) parts.push(`${q.extraBoxes} extra to keep`);
+      if (q.extraBoxes > 0) parts.push(`${q.extraBoxes} additional ${boxWord(q.extraBoxes)}`);
       const label = q.setupFee === 0 ? `One-time: <s>${money(q.listedSetupFee)}</s> $0` : `One-time: ${money(q.setupFee)}`;
       el.quoteSetup.innerHTML = `${label} (${parts.join(', ')}; ${money(boxPrice)} per box we supply)`;
     }
@@ -510,7 +510,7 @@
       `<strong>Service:</strong> ${rules.label}, ${b.count} ${unit}${b.count > 1 ? (unit === 'box' ? 'es' : 's') : ''}, ${b.accessType.toLowerCase()}`,
       `<strong>Your window:</strong> ${PLURAL_DAYS[b.serviceDay]}, ${b.slotStart} to ${b.slotEnd}`,
       `<strong>Price:</strong> ${money(b.price)}/${b.per}${b.seniorApplied ? ' with senior discount' : ''}`,
-      `<strong>Boxes:</strong> ${b.listedSetupFee === 0 ? 'no setup fee' : `${money(b.setupFee)} one-time (${[b.suppliedBoxes > 0 ? `we supply ${b.suppliedBoxes}` : '', b.ownBoxes > 0 ? `you supply ${b.ownBoxes}` : '', b.extraBoxes > 0 ? `${b.extraBoxes} extra to keep` : ''].filter(Boolean).join(', ')})`}`,
+      `<strong>Boxes:</strong> ${b.listedSetupFee === 0 ? 'no setup fee' : `${money(b.setupFee)} one-time (${[b.suppliedBoxes > 0 ? `we supply ${b.suppliedBoxes}` : '', b.ownBoxes > 0 ? `you supply ${b.ownBoxes}` : '', b.extraBoxes > 0 ? `${b.extraBoxes} additional` : ''].filter(Boolean).join(', ')})`}`,
       `<strong>Card on file:</strong> ${b.card ? `${b.card.brand} ending in ${b.card.last4}` : 'saved'}, nothing charged yet`,
       `<strong>Confirmation:</strong> ${result && result.emailSent ? `emailed to ${contact.email}` : `we'll text ${contact.phone || 'you'} to confirm`}`,
     ];
