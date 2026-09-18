@@ -482,6 +482,11 @@ h2 {
   margin: 0 auto 1.5rem;
   align-items: start;
 }
+/* Two-tile panels (scooping): same tile width as the 3-up grid, centered. */
+.pricing-grid--two {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 632px;
+}
 .price-card {
   background: var(--white);
   border: 1.5px solid var(--gray-light);
