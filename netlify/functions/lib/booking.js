@@ -4,12 +4,14 @@
 
 // ── Prices (USD) ────────────────────────────────────────────────────────────
 // Index 0 = 1 box/unit, 1 = 2, 2 = 3. Four or more needs a custom quote.
+// Porch service is a flat $5 off the home-entry price (changed from $15 on
+// 2026-09-18).
 const PRICING = {
   'Box Swap': {
     label: 'Weekly Box Swap',
     per: 'week',
     homeEntry: [25, 40, 55],
-    porch: [10, 25, 40],
+    porch: [20, 35, 50],
     hasSetupFee: true,
     porchAllowed: true,
   },
@@ -17,7 +19,7 @@ const PRICING = {
     label: 'Litter-Robot Cleaning',
     per: 'visit',
     homeEntry: [70, 95, 120],
-    porch: [55, 80, 105],
+    porch: [65, 90, 115],
     hasSetupFee: true,
     porchAllowed: true,
   },
@@ -47,6 +49,15 @@ const SENIOR_DISCOUNT_RATE = 0.1; // 10% off the service price for 65+
 // can count them. Flip this to false when the offer ends. The matching
 // announcement bar in index.html and book.html, and the promo popup in
 // script.js, must be turned off at the same time.
+//
+// FREE-WEEK RULE FOR MULTI-BOX / MULTI-UNIT SIGNUPS (Shawn, 2026-09-18):
+// when any free-first-week promo is on, only the FIRST box or unit's service
+// charge is waived for week 1. Every additional box or unit bills normally
+// from week 1. Example, 3 Litter-Robots at $120/visit home entry: week 1 is
+// billed at the 2-unit price ($95), not $0. Same idea as the setup fee below,
+// where the promo covers one box only (see foundingApplied in quote()).
+// Billing is manual today, so this is applied by hand on the first monthly
+// bill; nothing in this file computes the week-1 amount.
 const FOUNDING_MEMBER_PROMO_ACTIVE = false; // ended 2026-09-17
 
 // ── Service area ────────────────────────────────────────────────────────────
