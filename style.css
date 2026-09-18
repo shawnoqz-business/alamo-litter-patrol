@@ -1039,6 +1039,8 @@ footer {
 .footer-brand {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-self: start;
   gap: 0.25rem;
 }
 .footer-logo-img {
@@ -1168,7 +1170,7 @@ footer {
   .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
 
   .footer-top { grid-template-columns: 1fr; text-align: center; }
-  .footer-brand { align-items: center; }
+  .footer-brand { align-items: center; justify-self: center; }
   .footer-badge { text-align: center; }
   .footer-nav { flex-wrap: wrap; gap: 1rem; }
 
