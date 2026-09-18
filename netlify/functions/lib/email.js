@@ -5,12 +5,14 @@
 //                         (logged) and the booking still succeeds. Shawn's
 //                         Netlify name for it, NETLIFY_BOOKING_CONFIRMS_RESEND_API_KEY,
 //                         is accepted too.
-//   BOOKING_FROM_EMAIL    optional, default "Alamo Litter Patrol <hello@alamolitterpatrol.com>"
-//                         (the domain must be verified in Resend)
+//   BOOKING_FROM_EMAIL    optional, default "Alamo Litter Patrol <hello@bookings.alamolitterpatrol.com>"
+//                         (bookings.alamolitterpatrol.com is the domain verified in
+//                         Resend; the root domain is NOT, so an override must use a
+//                         verified domain or Resend rejects the send)
 //   BOOKING_NOTIFY_EMAIL  optional, default hello@alamolitterpatrol.com, gets a copy
 
 const RESEND_URL = 'https://api.resend.com/emails';
-const DEFAULT_FROM = 'Alamo Litter Patrol <hello@alamolitterpatrol.com>';
+const DEFAULT_FROM = 'Alamo Litter Patrol <hello@bookings.alamolitterpatrol.com>';
 const DEFAULT_NOTIFY = 'hello@alamolitterpatrol.com';
 
 function escapeHtml(s) {
@@ -84,15 +86,23 @@ function bookingEmail({ booking: b, contact, serviceLabel, calendar, boxNote }) 
   return { subject, html, text };
 }
 
+function getApiKey() {
+  return process.env.RESEND_API_KEY || process.env.NETLIFY_BOOKING_CONFIRMS_RESEND_API_KEY || '';
+}
+
+function getFromAddress() {
+  return process.env.BOOKING_FROM_EMAIL || DEFAULT_FROM;
+}
+
 // Sends through Resend. Resolves { sent: true, id } or { sent: false, reason }.
 async function sendEmail({ to, subject, html, text, attachments = [], bcc }) {
-  const apiKey = process.env.RESEND_API_KEY || process.env.NETLIFY_BOOKING_CONFIRMS_RESEND_API_KEY;
+  const apiKey = getApiKey();
   if (!apiKey) {
     console.warn('email: RESEND_API_KEY (or NETLIFY_BOOKING_CONFIRMS_RESEND_API_KEY) is not set; skipping confirmation email');
     return { sent: false, reason: 'not-configured' };
   }
   const payload = {
-    from: process.env.BOOKING_FROM_EMAIL || DEFAULT_FROM,
+    from: getFromAddress(),
     to: [to],
     bcc: bcc === undefined ? [process.env.BOOKING_NOTIFY_EMAIL || DEFAULT_NOTIFY] : bcc,
     reply_to: process.env.BOOKING_NOTIFY_EMAIL || DEFAULT_NOTIFY,
@@ -120,4 +130,4 @@ async function sendEmail({ to, subject, html, text, attachments = [], bcc }) {
   return { sent: true, id };
 }
 
-module.exports = { bookingEmail, sendEmail };
+module.exports = { bookingEmail, sendEmail, getApiKey, getFromAddress };

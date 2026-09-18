@@ -7,6 +7,7 @@
 
 const booking = require('./lib/booking');
 const { getPublishableKey } = require('./lib/stripe');
+const { getApiKey: getResendKey, getFromAddress } = require('./lib/email');
 const { HOURS, DAYS, SERVICE_TYPES, SLOT_CONFIG, formatTime } = require('./check-availability');
 
 exports.handler = async (event) => {
@@ -19,6 +20,8 @@ exports.handler = async (event) => {
     stripePublishableKey,
     stripeConfigured: Boolean(stripePublishableKey),
     slackBookingConfigured: Boolean(process.env.BOOKING_SLACK_WEBHOOK_URL),
+    emailConfigured: Boolean(getResendKey()),
+    emailFrom: getFromAddress(),
     pricing: booking.PRICING,
     boxPrice: booking.BOX_PRICE,
     maxExtraBoxes: booking.MAX_EXTRA_BOXES,
