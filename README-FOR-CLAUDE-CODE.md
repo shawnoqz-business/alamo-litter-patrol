@@ -66,7 +66,7 @@ Visit alamolitterpatrol.com and click through every nav link. Confirm:
 
 ## Critical Settings (Don't Change)
 
-- **Booking system:** `/book.html` + `booking.js` + `netlify/functions/` (booking-config, check-availability, create-setup-intent, create-booking; shared code in `lib/`). Customers live in Airtable (base id + PAT in Netlify env), cards in Stripe. Prices live in `pricing.html` AND `netlify/functions/lib/booking.js`; change both. Tally is gone.
+- **Booking system:** `/book.html` + `booking.js` + `netlify/functions/` (booking-config, check-availability, create-setup-intent, create-booking; shared code in `lib/`). Customers live in Airtable (base id + PAT in Netlify env), cards in Stripe. Prices live in `pricing.html` (and the cards on `index.html`, and the FAQ) AND `netlify/functions/lib/booking.js`; change all of them. Confirmation email goes through Resend (`lib/email.js`, env RESEND_API_KEY). Tally is gone.
 - **Email:** `hello@alamolitterpatrol.com` — Namecheap forwards this to Shawn's Gmail.
 - **Color palette:** `#FFFFFF` (white) / `#023047` (deep space blue) / `#FFB703` (amber flame) / `#219EBC` (blue green). ~70/20/7/3 ratio. All colors route through CSS variables in the `:root` block of `style.css` — `--black` (deep blue), `--orange` / `--orange-hover` (amber; variable names kept for compatibility), and `--blue-green` / `--blue-green-hover`. **Contrast rule:** amber is light — any text on an amber background must be dark (`var(--black)`), never white; amber as text only on dark backgrounds. Use `--blue-green` for secondary touches (links, active nav, hover states).
 - **Fonts:** Bebas Neue (display) + DM Sans (body) — loaded from Google Fonts in `style.css`.

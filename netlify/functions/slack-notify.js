@@ -20,19 +20,25 @@ function buildMessage({ formName, data = {}, human = {} }) {
 
   if (formName === 'booking' || formName === 'booking-failed') {
     const failed = formName === 'booking-failed';
+    const unit = data.serviceType === 'Litter-Robot' ? 'unit' : 'box';
+    const count = Number(data.count) || 1;
+    const day = DAY_NAMES[data.serviceDay] || data.serviceDay || '?';
     const lines = [
       failed
-        ? `BOOKING FAILED (card saved in Stripe, NO Airtable record): ${data.name || 'unknown'} - ${email} - ${data.phone || 'no phone'}`
-        : `NEW BOOKING: ${data.name || 'unknown'} - ${email} - ${data.phone || 'no phone'}`,
-      `${data.serviceType || '?'} x${data.count || '?'}, ${data.accessType || '?'}, ${DAY_NAMES[data.serviceDay] || data.serviceDay || '?'} ${data.slotStart || '?'} to ${data.slotEnd || '?'}`,
-      `${data.price || ''}${data.seniorDiscount ? ' (senior discount)' : ''}, ${data.setupFee || 'setup fee ?'}${data.foundingMember ? ', founding member' : ''}`,
-      `${data.address || ''}${zip ? ` (${zip})` : ''}`,
+        ? `:rotating_light: *Booking failed for ${data.name || 'unknown'}* (card saved in Stripe, no Airtable record)`
+        : `:paw_prints: *New booking: ${data.name || 'unknown'}*`,
+      `${data.serviceType || '?'}, ${count} ${unit}${count === 1 ? '' : unit === 'box' ? 'es' : 's'}, ${(data.accessType || '?').toLowerCase()}`,
+      `${day}s, ${data.slotStart || '?'} to ${data.slotEnd || '?'}`,
+      `${data.price || ''}${data.seniorDiscount ? ' (senior discount)' : ''} · ${data.setupFee || 'setup fee ?'}${data.foundingMember ? ' · founding member' : ''}`,
+      `${data.address || ''}`,
+      `${data.phone || 'no phone'} · ${email}`,
     ];
     if (data.accessNotes) lines.push(`Access: ${data.accessNotes}`);
     if (data.notes) lines.push(`Notes: ${data.notes}`);
-    if (data.stripeCustomerId) lines.push(`Stripe customer ${data.stripeCustomerId}`);
-    if (data.recordId) lines.push(`Airtable record ${data.recordId}`);
-    if (failed) lines.push(`Error: ${data.failure || 'unknown'}. Add this customer to Airtable by hand.`);
+    if (failed) {
+      if (data.stripeCustomerId) lines.push(`Stripe customer ${data.stripeCustomerId}`);
+      lines.push(`Error: ${data.failure || 'unknown'}. Add this customer to Airtable by hand.`);
+    }
     return { text: lines.join('\n'), webhookEnv: 'BOOKING_SLACK_WEBHOOK_URL' };
   }
 

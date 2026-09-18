@@ -131,6 +131,7 @@
       accessType: radioValue('accessType'),
       seniorDiscount: field('seniorDiscount').checked,
       ownBoxes: Number(field('ownBoxes').value) || 0,
+      extraBoxes: Number(field('extraBoxes').value) || 0,
     };
   }
 
@@ -144,18 +145,19 @@
     const base = (porch ? rules.porch : rules.homeEntry)[sel.count - 1];
     const price = sel.seniorDiscount ? Math.round(base * (1 - cfg.seniorDiscountRate)) : base;
     const own = rules.hasSetupFee ? Math.min(Math.max(0, sel.ownBoxes), sel.count) : 0;
+    const extra = rules.hasSetupFee ? Math.min(Math.max(0, sel.extraBoxes), cfg.maxExtraBoxes) : 0;
     const supplied = rules.hasSetupFee ? sel.count - own : 0;
-    const feeFor = (boxes) => (boxes > 0 ? cfg.setupFee.firstBox + cfg.setupFee.extraBox * (boxes - 1) : 0);
-    const listedSetupFee = rules.hasSetupFee ? feeFor(sel.count) : 0;
+    const listedSetupFee = rules.hasSetupFee ? sel.count * cfg.boxPrice : 0;
     const foundingApplied = cfg.foundingMemberPromoActive && supplied > 0;
     return {
       per: rules.per,
       price,
       basePrice: base,
       listedSetupFee,
-      setupFee: foundingApplied ? cfg.setupFee.extraBox * (supplied - 1) : feeFor(supplied),
+      setupFee: (supplied + extra - (foundingApplied ? 1 : 0)) * cfg.boxPrice,
       ownBoxes: own,
       suppliedBoxes: supplied,
+      extraBoxes: extra,
       foundingApplied,
       seniorApplied: sel.seniorDiscount,
     };
@@ -204,24 +206,22 @@
 
     el.quotePrice.textContent = money(q.price);
     el.quotePer.textContent = `/${q.per}`;
-    const fee = state.config.setupFee;
-    const unit = sel.serviceType === 'Litter-Robot' ? 'unit' : 'box';
+    const boxPrice = state.config.boxPrice;
+    const unit = sel.serviceType === 'Litter-Robot' ? 'loaner box' : 'box';
     const boxWord = (n) => (n === 1 ? 'box' : 'boxes');
     if (q.listedSetupFee === 0) {
       el.quoteSetup.textContent = 'No setup fee.';
-    } else if (q.ownBoxes > 0 && q.setupFee < q.listedSetupFee) {
-      el.quoteSetup.innerHTML = `One-time setup fee: <s>${money(q.listedSetupFee)}</s> ${money(q.setupFee)} (you supply ${q.ownBoxes} ${boxWord(q.ownBoxes)}, we supply ${q.suppliedBoxes})`;
-    } else if (q.foundingApplied) {
-      el.quoteSetup.innerHTML = `One-time setup fee: <s>${money(q.listedSetupFee)}</s> ${money(q.setupFee)}`;
-    } else if (sel.count > 1) {
-      el.quoteSetup.textContent = `One-time setup fee: ${money(q.listedSetupFee)} (${money(fee.firstBox)} first ${unit} + ${money(fee.extraBox)} each additional)`;
     } else {
-      el.quoteSetup.textContent = `One-time setup fee: ${money(q.listedSetupFee)}`;
+      const parts = [];
+      if (q.suppliedBoxes > 0) parts.push(`we supply ${q.suppliedBoxes} ${unit === 'box' ? boxWord(q.suppliedBoxes) : `loaner ${boxWord(q.suppliedBoxes)}`}`);
+      if (q.ownBoxes > 0) parts.push(`you supply ${q.ownBoxes}`);
+      if (q.extraBoxes > 0) parts.push(`${q.extraBoxes} extra to keep`);
+      const label = q.setupFee === 0 ? `One-time: <s>${money(q.listedSetupFee)}</s> $0` : `One-time: ${money(q.setupFee)}`;
+      el.quoteSetup.innerHTML = `${label} (${parts.join(', ')}; ${money(boxPrice)} per box we supply)`;
     }
     const notes = [];
     if (q.seniorApplied) notes.push(`Senior discount applied (was ${money(q.basePrice)}).`);
-    if (q.foundingApplied) notes.push(`Founding member offer: first week free, and the ${money(fee.firstBox)} setup fee for your first ${unit} is on us.`);
-    if (q.ownBoxes > 0) notes.push(q.suppliedBoxes === 0 ? 'No setup fee: you are supplying every box.' : 'No setup fee on the boxes you supply.');
+    if (q.foundingApplied) notes.push(`Founding member offer: first week free, and one ${money(boxPrice)} box is on us.`);
     notes.push("Billed on the 1st of each month for the previous month's visits.");
     el.quoteNote.textContent = notes.join(' ');
   }
@@ -385,6 +385,8 @@
     const payment = state.elements.create('payment', {
       layout: 'tabs',
       wallets: { applePay: 'never', googlePay: 'never', link: 'never' },
+      // Stripe's own mandate text says "their terms"; we show our own line instead.
+      terms: { card: 'never' },
     });
     payment.mount(el.paymentElement);
     state.payment = payment;
@@ -464,6 +466,7 @@
         accessType: sel.accessType,
         seniorDiscount: sel.seniorDiscount,
         ownBoxes: sel.ownBoxes,
+        extraBoxes: sel.extraBoxes,
         serviceDay: el.serviceDay.value,
         slotStart: el.slotStart.value,
         name: contact.name,
@@ -484,7 +487,7 @@
         body: JSON.stringify(payload),
       });
 
-      showConfirmation(result.booking, contact);
+      showConfirmation(result.booking, contact, result);
     } catch (err) {
       if (err.status === 409) {
         // Card is saved; only the slot needs re-picking.
@@ -500,15 +503,16 @@
     }
   });
 
-  function showConfirmation(b, contact) {
+  function showConfirmation(b, contact, result) {
     const rules = state.config.pricing[b.serviceType];
     const unit = b.serviceType === 'Litter-Robot' ? 'unit' : 'box';
     const items = [
       `<strong>Service:</strong> ${rules.label}, ${b.count} ${unit}${b.count > 1 ? (unit === 'box' ? 'es' : 's') : ''}, ${b.accessType.toLowerCase()}`,
       `<strong>Your window:</strong> ${PLURAL_DAYS[b.serviceDay]}, ${b.slotStart} to ${b.slotEnd}`,
-      `<strong>Price:</strong> ${money(b.price)}/${b.per}${b.seniorApplied ? ' with senior discount' : ''}, setup fee ${money(b.setupFee)}${b.ownBoxes > 0 ? ` (you supply ${b.ownBoxes} of ${b.count} boxes)` : ''}${b.foundingApplied ? ' (founding member offer)' : ''}`,
+      `<strong>Price:</strong> ${money(b.price)}/${b.per}${b.seniorApplied ? ' with senior discount' : ''}`,
+      `<strong>Boxes:</strong> ${b.listedSetupFee === 0 ? 'no setup fee' : `${money(b.setupFee)} one-time (${[b.suppliedBoxes > 0 ? `we supply ${b.suppliedBoxes}` : '', b.ownBoxes > 0 ? `you supply ${b.ownBoxes}` : '', b.extraBoxes > 0 ? `${b.extraBoxes} extra to keep` : ''].filter(Boolean).join(', ')})`}`,
       `<strong>Card on file:</strong> ${b.card ? `${b.card.brand} ending in ${b.card.last4}` : 'saved'}, nothing charged yet`,
-      `<strong>Confirmation to:</strong> ${contact.email}`,
+      `<strong>Confirmation:</strong> ${result && result.emailSent ? `emailed to ${contact.email}` : `we'll text ${contact.phone || 'you'} to confirm`}`,
     ];
     el.doneSummary.innerHTML = items.map((i) => `<li>${i}</li>`).join('');
     buildCalendarLinks(b, rules.label);
@@ -592,6 +596,7 @@
     }
 
     field('ownBoxes').addEventListener('change', updateServiceUI);
+    field('extraBoxes').addEventListener('change', updateServiceUI);
     form.querySelectorAll('input[name="serviceType"], input[name="accessType"], input[name="seniorDiscount"]').forEach((input) => {
       input.addEventListener('change', () => {
         updateServiceUI();

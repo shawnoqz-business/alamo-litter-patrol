@@ -1266,6 +1266,9 @@ footer {
    BOOKING FORM (book.html)
 ══════════════════════════════ */
 .booking-form { max-width: 720px; }
+.booking-form [hidden] { display: none !important; }
+.booking-consent { margin: 0.5rem 0 0; color: var(--gray-dark); }
+.booking-consent a { color: var(--blue-green); }
 .booking-step {
   border: 1.5px solid var(--gray-light);
   border-radius: 8px;

@@ -9,7 +9,7 @@
 //
 // Body:
 // {
-//   serviceType, count, accessType, seniorDiscount, ownBoxes,
+//   serviceType, count, accessType, seniorDiscount, ownBoxes, extraBoxes, extraBoxes,
 //   serviceDay, slotStart,
 //   name, email, phone, address, zip, accessNotes, notes,
 //   stripeCustomerId, stripeSetupIntentId,
@@ -21,6 +21,8 @@ const booking = require('./lib/booking');
 const { stripeRequest } = require('./lib/stripe');
 const availability = require('./check-availability');
 const { notify } = require('./slack-notify');
+const { weeklyWindow } = require('./lib/calendar');
+const { bookingEmail, sendEmail } = require('./lib/email');
 
 function json(statusCode, body) {
   return {
@@ -89,6 +91,7 @@ function validate(input) {
       accessType,
       seniorDiscount: Boolean(input.seniorDiscount),
       ownBoxes: Math.min(Math.max(0, Math.floor(Number(input.ownBoxes) || 0)), 10),
+      extraBoxes: Math.min(Math.max(0, Math.floor(Number(input.extraBoxes) || 0)), 10),
       serviceDay,
       slotStart,
       startMinutes,
@@ -194,12 +197,18 @@ exports.handler = async (event) => {
   // Otherwise left blank: a fee is still owed (goes on the first monthly bill),
   // mark Paid then.
 
+  // Who supplies which boxes, in plain words, for Airtable, Slack and the email.
+  let boxNote = '';
   let setupNote;
   if (priced.listedSetupFee === 0) setupNote = 'no setup fee';
   else {
-    setupNote = `setup fee $${priced.setupFee}`;
-    if (priced.ownBoxes > 0) setupNote += ` (customer supplies ${priced.ownBoxes} of ${data.count} boxes, we supply ${priced.suppliedBoxes})`;
-    if (priced.foundingApplied) setupNote += ' (first supplied box covered by founding member offer)';
+    const parts = [];
+    if (priced.suppliedBoxes > 0) parts.push(`we supply ${priced.suppliedBoxes} for the rotation`);
+    if (priced.ownBoxes > 0) parts.push(`customer supplies ${priced.ownBoxes}`);
+    if (priced.extraBoxes > 0) parts.push(`${priced.extraBoxes} extra to keep`);
+    if (priced.foundingApplied) parts.push('one box covered by founding member offer');
+    boxNote = parts.join(', ');
+    setupNote = `boxes $${priced.setupFee} one-time (${boxNote}; $${priced.boxPrice} per box we supply)`;
   }
 
   const notesParts = [];
@@ -220,7 +229,7 @@ exports.handler = async (event) => {
     slotStart: data.slotStart,
     slotEnd,
     price: `$${priced.price}/${priced.per}`,
-    setupFee: setupNote,
+    setupFee: priced.listedSetupFee === 0 ? 'no setup fee' : `$${priced.setupFee} boxes one-time (${boxNote})`,
     seniorDiscount: data.seniorDiscount,
     foundingMember: booking.FOUNDING_MEMBER_PROMO_ACTIVE,
     accessNotes: data.accessNotes,
@@ -253,9 +262,39 @@ exports.handler = async (event) => {
     console.error('create-booking: Slack notification failed', err);
   }
 
+  // 5. Confirmation email with calendar attachment. Also non-fatal.
+  const calendar = weeklyWindow({
+    serviceLabel: priced.service,
+    serviceDay: data.serviceDay,
+    slotStart: data.slotStart,
+    slotEnd,
+    uid: `${record.id}@alamolitterpatrol.com`,
+  });
+  let emailSent = false;
+  try {
+    const mail = bookingEmail({
+      booking: { ...data, slotEnd, price: priced.price, per: priced.per, seniorApplied: priced.seniorApplied, listedSetupFee: priced.listedSetupFee, setupFee: priced.setupFee, card },
+      contact: { name: data.name, email: data.email },
+      serviceLabel: priced.service,
+      calendar,
+      boxNote,
+    });
+    const result = await sendEmail({
+      to: data.email,
+      subject: mail.subject,
+      html: mail.html,
+      text: mail.text,
+      attachments: [{ filename: 'alamo-litter-patrol.ics', content: calendar.ics }],
+    });
+    emailSent = result.sent;
+  } catch (err) {
+    console.error('create-booking: confirmation email failed', err);
+  }
+
   return json(200, {
     ok: true,
     recordId: record.id,
+    emailSent,
     booking: {
       serviceType: data.serviceType,
       count: data.count,
@@ -270,6 +309,8 @@ exports.handler = async (event) => {
       setupWaived: priced.setupWaived,
       ownBoxes: priced.ownBoxes,
       suppliedBoxes: priced.suppliedBoxes,
+      extraBoxes: priced.extraBoxes,
+      boxPrice: priced.boxPrice,
       foundingApplied: priced.foundingApplied,
       card,
       seniorApplied: priced.seniorApplied,

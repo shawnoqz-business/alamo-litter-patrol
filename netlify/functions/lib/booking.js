@@ -31,10 +31,12 @@ const PRICING = {
   },
 };
 
-// One-time setup fee: $50 covers the first stainless steel box (or loaner),
-// then $25 for each additional box or unit. Matches the tiers on pricing.html
-// (1 box $50, 2 boxes $75, 3 boxes $100).
-const SETUP_FEE = { firstBox: 50, extraBox: 25 };
+// One-time charge per stainless steel box WE supply (rotation box or loaner),
+// and the same price for extra boxes a customer buys to keep. Boxes the
+// customer supplies cost nothing. Matches pricing.html (1 box $40, 2 $80, 3 $120).
+// Cost basis 2026-09-17: ~$15.10 per box (10-pack at $150.99).
+const BOX_PRICE = 40;
+const MAX_EXTRA_BOXES = 3;
 
 const MAX_BOXES = 3; // above this: custom quote
 const SENIOR_DISCOUNT_RATE = 0.1; // 10% off the service price for 65+
@@ -59,13 +61,13 @@ function isServiceZip(zip) {
 
 // Prices a selection. All amounts are whole dollars.
 //   price            what they pay per week/visit (after senior discount)
-//   listedSetupFee   the published setup fee if we supplied every box
-//   suppliedBoxes    boxes we provide (count minus the customer's own boxes)
-//   setupFee         fee for the boxes we supply: $50 for the first, $25 each
-//                    additional, $0 when the customer supplies all of them.
-//                    The founding member offer (when on) covers the first
-//                    supplied box.
-function quote({ serviceType, count, accessType, seniorDiscount, ownBoxes }) {
+//   listedSetupFee   the box charge if we supplied every enrolled box
+//   ownBoxes         boxes the customer supplies (no charge)
+//   suppliedBoxes    rotation/loaner boxes we supply (count minus ownBoxes)
+//   extraBoxes       extra boxes bought to keep
+//   setupFee         (suppliedBoxes + extraBoxes) x BOX_PRICE, one-time.
+//                    The founding member offer (when on) covers one supplied box.
+function quote({ serviceType, count, accessType, seniorDiscount, ownBoxes, extraBoxes }) {
   const rules = PRICING[serviceType];
   if (!rules) return { error: 'Unknown service type' };
   const n = Number(count);
@@ -81,22 +83,25 @@ function quote({ serviceType, count, accessType, seniorDiscount, ownBoxes }) {
   const seniorApplied = Boolean(seniorDiscount);
   const price = seniorApplied ? Math.round(base * (1 - SENIOR_DISCOUNT_RATE)) : base;
 
-  const own = Math.min(Math.max(0, Math.floor(Number(ownBoxes) || 0)), n);
+  const own = rules.hasSetupFee ? Math.min(Math.max(0, Math.floor(Number(ownBoxes) || 0)), n) : 0;
+  const extra = rules.hasSetupFee ? Math.min(Math.max(0, Math.floor(Number(extraBoxes) || 0)), MAX_EXTRA_BOXES) : 0;
   const supplied = rules.hasSetupFee ? n - own : 0;
-  const feeFor = (boxes) => (boxes > 0 ? SETUP_FEE.firstBox + SETUP_FEE.extraBox * (boxes - 1) : 0);
-  const listedSetupFee = rules.hasSetupFee ? feeFor(n) : 0;
+  const listedSetupFee = rules.hasSetupFee ? n * BOX_PRICE : 0;
   const foundingApplied = FOUNDING_MEMBER_PROMO_ACTIVE && supplied > 0;
-  const setupFee = foundingApplied ? SETUP_FEE.extraBox * (supplied - 1) : feeFor(supplied);
+  const chargedBoxes = supplied + extra - (foundingApplied ? 1 : 0);
+  const setupFee = chargedBoxes * BOX_PRICE;
 
   return {
     service: rules.label,
     per: rules.per,
     basePrice: base,
     price,
+    boxPrice: BOX_PRICE,
     listedSetupFee,
     setupFee,
-    ownBoxes: rules.hasSetupFee ? own : 0,
+    ownBoxes: own,
     suppliedBoxes: supplied,
+    extraBoxes: extra,
     setupWaived: rules.hasSetupFee && setupFee === 0,
     seniorApplied,
     foundingApplied,
@@ -105,7 +110,8 @@ function quote({ serviceType, count, accessType, seniorDiscount, ownBoxes }) {
 
 module.exports = {
   PRICING,
-  SETUP_FEE,
+  BOX_PRICE,
+  MAX_EXTRA_BOXES,
   MAX_BOXES,
   SENIOR_DISCOUNT_RATE,
   FOUNDING_MEMBER_PROMO_ACTIVE,
