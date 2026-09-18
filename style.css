@@ -1039,16 +1039,14 @@ footer {
 .footer-brand {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-self: start;
   gap: 0.25rem;
 }
 .footer-logo-img {
   height: 36px;
   width: auto;
   display: block;
-}
-.footer-city {
-  font-size: 0.8rem;
-  color: var(--gray-mid);
 }
 .footer-nav {
   display: flex;
@@ -1071,15 +1069,31 @@ footer {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 1.25rem;
-  padding: 0 2rem 1.5rem;
+  gap: 0.9rem;
+  padding: 0 2rem 1.75rem;
 }
 .footer-social a {
-  font-size: 0.85rem;
-  color: var(--gray-mid);
-  transition: color var(--t-fast);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--black);
+  color: var(--white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--t-fast), transform var(--t-fast);
 }
-.footer-social a:hover { color: var(--black); }
+.footer-social a:hover {
+  background: var(--orange);
+  color: var(--black);
+  transform: translateY(-2px);
+}
+.footer-social svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+  display: block;
+}
 .footer-bottom {
   border-top: 1px solid var(--gray-light);
   text-align: center;
@@ -1152,7 +1166,7 @@ footer {
   .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
 
   .footer-top { grid-template-columns: 1fr; text-align: center; }
-  .footer-brand { align-items: center; }
+  .footer-brand { align-items: center; justify-self: center; }
   .footer-badge { text-align: center; }
   .footer-nav { flex-wrap: wrap; gap: 1rem; }
 
