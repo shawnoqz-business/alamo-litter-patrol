@@ -16,14 +16,16 @@ alamo-litter-patrol-v2/
 ├── faq.html                    ← Full Q&A
 ├── contact.html                ← Contact info + booking link
 ├── book.html                   ← Native booking form (booking.js + Netlify Functions, Airtable + Stripe)
+├── founding-member.html        ← noindex mailer-QR landing page (deliberately not in sitemap)
 ├── privacy.html                ← Privacy placeholder (replace with Termly later)
 ├── terms.html                  ← Terms placeholder (replace with Termly later)
 ├── style.css                   ← Shared stylesheet (every page uses it)
-├── script.js                   ← Shared JS (nav, FAQ, pricing tabs)
+├── script.js                   ← Shared JS (nav, FAQ, pricing tabs, promo popup, form handlers)
 ├── robots.txt                  ← SEO
 ├── sitemap.xml                 ← SEO
 ├── README-FOR-CLAUDE-CODE.md   ← This file
-└── assets/                     ← Drop bug-hero.jpg here (and any future images)
+├── netlify/functions/          ← slack-notify.js + sheets-relay.js (form relays)
+└── assets/                     ← logo, favicons, hero (bug-hero-glow.jpg/.webp), about photo, og-card
 ```
 
 ---
@@ -93,11 +95,19 @@ Visit alamolitterpatrol.com and click through every nav link. Confirm:
 
 ## Known Placeholders To Replace Later
 
-1. **assets/bug-hero.jpg** — must be added before deploy
-2. **ZIP codes on service-area.html** — currently a reasonable best guess for Leon Valley / Helotes / NW SA / Medical Center / UTSA. Shawn should verify and trim/add as needed.
-3. **privacy.html and terms.html** — usable placeholders, but generate proper versions on termly.io (~10 min, free) before formal LLC launch.
-4. **About page photo** — currently reuses bug-hero.jpg. Consider a second photo (Shawn + Bug, or sanitization station).
-5. **Phone number** — not currently displayed anywhere. Add once Google Voice or OpenPhone is set up. Add to contact.html and the mobile CTA bar.
+1. **privacy.html and terms.html** — usable, hand-edited (the Cookies & Advertising section discloses the Meta Pixel), but generate proper versions on termly.io (~10 min, free) before formal LLC launch.
+
+---
+
+## Resolved Since The V2 Build
+
+Kept here so these don't get re-opened by a future pass:
+
+- **Hero image** — `bug-hero.jpg` no longer exists. The hero is `assets/bug-hero-glow.jpg`, served via `<picture>` with a WebP first (`bug-hero-glow.webp`). It's the LCP image and keeps `fetchpriority="high"`.
+- **ZIP codes** — no longer a guess. Confirmed 2026-08-23 and extended 2026-09-17; the service zone is 9 ZIPs: 78238 Leon Valley, 78240 / 78250 / 78230 NW San Antonio, 78229 Medical Center, 78249 UTSA area, 78231 Shavano Park area, 78023 Helotes, 78253 Alamo Ranch. They live in exactly two places — the `zip-chip` grid on `service-area.html` and the `areaServed` block of the `LocalBusiness` JSON-LD on all 10 indexable pages. Changing the zone means editing both.
+- **About page photo** — `assets/about-photo.jpg` is in place; it no longer reuses the hero.
+- **Phone number** — (210) 920-0654 is live. **Shawn's call: contact page only.** It appears as a visible `tel:` link on `contact.html` and in the JSON-LD on all 10 indexable pages. Deliberately NOT in the footer, nav, or the mobile CTA bar — don't "finish the job" by adding it there.
+- **Schema.org LocalBusiness markup** — shipped. Present on all 10 indexable pages, anchored at `@id: https://alamolitterpatrol.com/#business`. `faq.html` also carries `FAQPage`; `pricing.html` also carries an `OfferCatalog` using price ranges. `founding-member.html` is excluded on purpose (noindex).
 
 ---
 
@@ -109,4 +119,3 @@ Visit alamolitterpatrol.com and click through every nav link. Confirm:
 - SDVOSB certification logo (once SBA VetCert approved)
 - Real operation photos (replacing stock-ish elements)
 - Google Business Profile embed on contact page
-- Schema.org LocalBusiness markup (after Google Business Profile is claimed)
